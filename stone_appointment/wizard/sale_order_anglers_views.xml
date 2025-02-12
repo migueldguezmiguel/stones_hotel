@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="sale_order_anglers_wizard_form" model="ir.ui.view">
+            <field name="name">sale.order.anglers.wizard</field>
+            <field name="model">sale.order.anglers.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Sale Order">
+                    <sheet>
+                        <group>
+                            <div class="text-muted mb-3" colspan="2">
+                                <i>Permite agregar lineas de la cotización y las reservas</i>
+                            </div>
+                            <group string="APPOINTMENTS">
+                                <field name="option_id" 
+                                    options="{'no_quick_create': True}"
+                                    domain="[('attribute_id.is_package', '=', True), ('attribute_id', '=', attribute_id)]"
+                                    widget="radio" />
+                            </group>
+                            <group string="GUEST">
+                                <field name="guides" />
+                                <field name="guest_ids" widget="many2many_tags" domain="[('parent_id', '=', partner_id)]" />                                
+                            </group>
+                        </group>
+                        <group string="Extras">
+                            <field colspan="2" name="additional_lines" nolabel="1" context="{}">
+                                <tree string="Extras" editable="bottom">
+                                    <field name="additional_id" domain="[('id', 'in', parent.additional_fees_ids)]" widget="selection" />
+                                    <field name="extra" />
+                                    <field name="wizard_id" column_invisible="1" />
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <field name="angler_line_id" invisible="1" />
+                            <field name="type_action" invisible="1" />
+                            <field name="sale_id" invisible="1" />
+                            <field name="attribute_id" invisible="1" domain="[('is_package', '=', True)]" />
+                            <field name="partner_id" invisible="1"/>
+                            <field name="template_id" invisible="1"/>
+                            <field name="appointment_id" invisible="1"/>
+                            <field name="recurso_id" invisible="1"/>
+                            <field name="event_id" invisible="1" />
+                            <field name="company_id" invisible="1" />
+                            <field name="date_from" invisible="1" widget="date" />
+                            <field name="date_to" invisible="1" widget="date" />
+                            <field name="additional_fees_ids" invisible="1" widget="many2many_tags" />
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button string="Create Angler Line" name="action_create_anglers" type="object" class="oe_highlight" data-hotkey="q" invisible="type_action != 'create' "  />
+                        <button string="Edit Angler Line" name="action_edit_anglers" type="object" class="oe_highlight" data-hotkey="q" invisible="type_action != 'edit' "  />
+                        <button string="Cancel" class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="sale_order_anglers_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Anglers</field>
+            <field name="res_model">sale.order.anglers.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stone_appointment.sale_order_anglers_wizard_form"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will validate all journal entries selected. Once journal entries are validated, you can not update them anymore.</field>
+            <field name="binding_model_id" ref="sale.model_sale_order" />
+            <field name="binding_view_types">form,list</field>
+        </record>
+
+
+    </data>
+</odoo>
+

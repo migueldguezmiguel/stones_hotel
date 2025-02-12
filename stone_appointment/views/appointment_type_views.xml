@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <data>
+        <record id="appointment_type_form_stn" model="ir.ui.view">
+            <field name="name">appointment.type.form</field>
+            <field name="model">appointment.type</field>
+            <field name="inherit_id" ref="appointment.appointment_type_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='resource_ids']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                </xpath>            
+                <notebook position="inside">
+                    <page string="Extras" name="extras">
+                        <group>
+                            <group name="product_details" string="Product">
+                                <field name="product_tmpl_id" />
+                                <field name="additional_fees_ids" widget="many2many_tags" />
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+
+</odoo>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="calendar_event_view_tree_booking+stn" model="ir.ui.view">
+        <field name="name">calendar.event.view.tree.booking.stn</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="appointment.calendar_event_view_tree_booking"/>
+        <field name="arch" type="xml">
+            <field name="appointment_resource_ids" position="after">
+                <field name="stn_angler_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_form_extras" model="ir.ui.view">
+        <field name="name">calendar.event.form.extras</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Extras" name="extras">
+                    <group>
+                        <group name="rates_details" string="Tarifas">
+                            <field name="stn_precio_total" widget="monetary" />
+                            <field name="appointment_booker_id" />
+                        </group>
+                        <group name="reservation_details" string="Resevacion">
+                            <field name="sale_id" readonly="1" />
+                            <field name="folio" string="Folio de Reservación" />
+                            <field name="stn_no_personas" />
+                            <field name="stn_no_habitaciones" />
+                            <field name="stn_no_guias" />
+                        </group>
+                        <group name="angler_details" string="Anglers">
+                            <field name="stn_angler_ids" string="Anglers" widget="many2many_tags" />
+                        </group>
+                        <group name="guides_details" string="Anglers">
+                            <field name="stn_guides_ids" string="Guides" widget="many2many_tags" />
+                        </group>
+                        <group name="resource_details" string="Resources">
+                            <field name="resource_ids" string="Resource" widget="many2many_tags" />
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
+

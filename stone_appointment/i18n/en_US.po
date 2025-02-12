@@ -1,0 +1,343 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_appointment
+# 	* stone_appointment
+# 	* appointment
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-05 18:03+0000\n"
+"PO-Revision-Date: 2025-02-05 18:03+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_count
+msgid "# Reservations"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_count_report
+msgid "# Reservations in the last 30 days"
+msgstr ""
+
+#. modules: stone_appointment, website_appointment
+#: model_terms:ir.ui.view,arch_db:stone_appointment.reservations_web_comfirm
+#: model_terms:ir.ui.view,arch_db:stone_appointment.reservations_web_extra
+#: model_terms:ir.ui.view,arch_db:stone_appointment.reservations_web_index
+#: model_terms:ir.ui.view,arch_db:website_appointment.appointment_form
+#: model_terms:ir.ui.view,arch_db:website_appointment.appointment_info
+#: model_terms:ir.ui.view,arch_db:website_appointment.appointment_select_operator
+msgid "<i class=\"fa fa-long-arrow-left me-2\"/>All Reservations"
+msgstr ""
+
+#. module: appointment
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_report_all
+#: model:ir.ui.menu,name:appointment.menu_schedule_report_all_events
+msgid "All Reservations"
+msgstr ""
+
+
+#. modules: appointment, website_appointment
+#. odoo-javascript
+#. odoo-python
+#: code:addons/appointment/static/src/js/wysiwyg.js:0
+#: code:addons/website_appointment/models/website.py:0
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_type_id
+#: model:website.menu,name:website_appointment.menu_appointment
+#: model_terms:ir.ui.view,arch_db:website_appointment.website_online_appointment_snippet
+#, python-format
+msgid "Reservations"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_answer_input
+msgid "Reservations Answer Inputs"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_answer_input_ids
+msgid "Reservations Answers"
+msgstr ""
+
+#. module: appointment
+#: model:mail.message.subtype,description:appointment.mt_calendar_event_booked
+#: model:mail.message.subtype,name:appointment.mt_appointment_type_booked
+#: model:mail.message.subtype,name:appointment.mt_calendar_event_booked
+msgid "Reservations Booked"
+msgstr ""
+
+#. module: appointment
+#: model:mail.template,subject:appointment.appointment_booked_mail_template
+msgid "Reservations Booked: {{ object.appointment_type_id.name }}"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_booking_line
+msgid "Reservations Booking Line"
+msgstr ""
+
+#. module: appointment
+#: model:mail.message.subtype,description:appointment.mt_calendar_event_canceled
+#: model:mail.message.subtype,name:appointment.mt_appointment_type_canceled
+#: model:mail.message.subtype,name:appointment.mt_calendar_event_canceled
+msgid "Reservations Canceled"
+msgstr ""
+
+#. module: appointment
+#: model:mail.template,subject:appointment.appointment_canceled_mail_template
+msgid "Reservations Canceled: {{ object.appointment_type_id.name }}"
+msgstr ""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_form
+msgid "Reservations Details"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__appointment_duration_formatted
+msgid "Reservations Duration Formatted "
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,help:appointment.field_appointment_type__appointment_duration_formatted
+msgid "Reservations Duration formatted in words"
+msgstr ""
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/appointment_type.py:0
+#, python-format
+msgid "Reservations Duration should be higher than 0.00."
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_invite_id
+msgid "Reservations Invitation"
+msgstr ""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_invite_view_search
+msgid "Reservations Invitation Links"
+msgstr ""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree_invitation
+msgid "Reservations Invitations"
+msgstr ""
+
+#. module: website_appointment
+#: model:ir.model,name:website_appointment.model_appointment_invite
+msgid "Reservations Invite"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__meeting_ids
+msgid "Reservations Meetings"
+msgstr ""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "Reservations Name"
+msgstr ""
+
+#. module: appointment
+#: model:onboarding.onboarding,name:appointment.onboarding_onboarding_appointment
+msgid "Reservations Onboarding"
+msgstr ""
+
+#. module: website_appointment
+#: model:ir.actions.act_window,name:website_appointment.action_appointment_pages_list
+msgid "Reservations Pages"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_answer
+msgid "Reservations Question Answers"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_question
+msgid "Reservations Questions"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_resource
+#: model:ir.model.fields,field_description:appointment.field_appointment_booking_line__appointment_resource_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_resource__name
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_resource_id
+msgid "Reservations Resource"
+msgstr ""
+
+#. module: appointment
+#: model:ir.actions.server,name:appointment.resource_calendar_leaves_action_show_appointment_resources
+msgid "Reservations Resource Leaves"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__resource_ids
+#: model:ir.model.fields,field_description:appointment.field_calendar_event__appointment_resource_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_resource_view_search
+msgid "Reservations Resources"
+msgstr ""
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_resource_action
+msgid ""
+"Reservations Resources are the places or equipment people can book\n"
+"                (e.g. Tables, Tennis Courts, Meeting Rooms, ...)"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_type__name
+msgid "Reservations Title"
+msgstr ""
+
+#. modules: appointment, website_appointment
+#: model:ir.model,name:website_appointment.model_appointment_type
+#: model:ir.model.fields,field_description:appointment.field_appointment_answer_input__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_onboarding_link__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_question__appointment_type_id
+#: model:ir.model.fields,field_description:appointment.field_appointment_slot__appointment_type_id
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_answer_input_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_tree
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_search
+msgid "Reservations Type"
+msgstr ""
+
+#. module: website_appointment
+#. odoo-javascript
+#: code:addons/website_appointment/static/src/xml/website_appointment_templates.xml:0
+#, python-format
+msgid "Reservations Type Name"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_appointment_invite__appointment_type_ids
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "Reservations Types"
+msgstr ""
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Reservations canceled"
+msgstr ""
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Reservations canceled by: %(partners)s"
+msgstr ""
+
+#. module: appointment
+#. odoo-python
+#: code:addons/appointment/models/calendar_event.py:0
+#, python-format
+msgid "Reservations re-booked"
+msgstr ""
+
+#. module: appointment
+#: model:mail.template,name:appointment.appointment_booked_mail_template
+msgid "Reservations: Reservations Booked"
+msgstr ""
+
+#. module: appointment
+#: model:mail.template,name:appointment.appointment_canceled_mail_template
+msgid "Reservations: Reservations Canceled"
+msgstr ""
+
+#. module: appointment
+#: model:mail.template,name:appointment.attendee_invitation_mail_template
+msgid "Reservations: Attendee Invitation"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model,name:appointment.model_appointment_slot
+msgid "Reservations: Time Slot"
+msgstr ""
+
+#. modules: appointment, website_appointment
+#: model:ir.actions.act_window,name:appointment.appointment_type_action
+#: model:ir.actions.act_window,name:appointment.calendar_event_action_appointment_reporting
+#: model:ir.ui.menu,name:appointment.appointment_menu_calendar
+#: model:ir.ui.menu,name:appointment.appointment_type_menu
+#: model:ir.ui.menu,name:appointment.main_menu_appointments
+#: model:ir.ui.menu,name:appointment.menu_schedule_report_all
+#: model:ir.ui.menu,name:website_appointment.menu_appointment_pages
+#: model:ir.ui.menu,name:website_appointment.website_appointment_type_menu
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_form
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_graph
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_pivot
+#: model_terms:ir.ui.view,arch_db:appointment.calendar_event_view_search
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_home_appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_home_menu_appointment
+#: model_terms:ir.ui.view,arch_db:website_appointment.s_online_appointment_options
+msgid "Reservations"
+msgstr ""
+
+#. module: website_appointment
+#: model_terms:ir.ui.view,arch_db:website_appointment.snippet_options
+msgid "Reservations Page"
+msgstr ""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.portal_my_appointments
+msgid "Reservations by"
+msgstr ""
+
+#. module: stone_appointment
+#: model_terms:ir.ui.view,arch_db:stone_appointment.portal_my_home_account_custom
+msgid "My Account, reschedule or cancel your Reservations"
+msgstr ""
+
+#. module: appointment
+#: model_terms:ir.ui.view,arch_db:appointment.appointment_type_view_search
+msgid "My Reservations"
+msgstr ""
+
+#. module: appointment
+#: model:ir.model.fields,field_description:appointment.field_calendar_alarm__default_for_new_appointment_type
+msgid "New Reservations Default"
+msgstr ""
+
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.appointment_type_action
+msgid "No Reservations Configured"
+msgstr ""
+
+#. module: appointment
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_view_bookings_resources
+#: model_terms:ir.actions.act_window,help:appointment.calendar_event_action_view_bookings_users
+msgid "No Reservations or Resource were found."
+msgstr ""
+
+
+#. module: stone_appointment
+#: model:website.menu,name:stone_appointment.menu_stone_appointment_web_reservation
+#: model_terms:ir.ui.view,arch_db:stone_appointment.appointment_validated_custom
+msgid "Reservation"
+msgstr ""
+
+#. module: stone_appointment
+#: model:website.menu,name:stone_appointment.menu_stone_appointment_reservation
+msgid "Reservations NO"
+msgstr ""
+
+#. module: stone_appointment
+#: model_terms:ir.ui.view,arch_db:stone_appointment.view_calendar_event_form_extras
+msgid "Resevacion"
+msgstr ""
+

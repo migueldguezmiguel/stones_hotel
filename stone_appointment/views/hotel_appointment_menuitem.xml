@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem
+        id="sale_resources_menu" 
+        name="Sale Resources" 
+        parent='sale.menu_sale_config' 
+        sequence="50"
+        action='stone_appointment.sale_resources_action' />
+    <menuitem
+        id="sale_additional_fees_menu" 
+        name="Sale Additional Fees" 
+        parent='sale.menu_sale_config' 
+        sequence="51"
+        action='stone_appointment.sale_additional_fees_action' />
+
+</odoo>

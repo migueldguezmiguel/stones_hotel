@@ -1,0 +1,60 @@
+/***** Form 2 *****/
+
+.form-2-box { text-align: left; }
+
+.form-2-box legend { font-size: inherit; line-height: 30px; font-weight: 600; text-transform: uppercase; color: #555; }
+
+.form-2-box .form-check-label { line-height: 1.5; vertical-align: top; }
+
+.form-2-box input[type="text"],
+.form-2-box textarea {
+    background: #fff; border: 2px solid #ddd; 
+    font-family: 'Open Sans', sans-serif; font-size: 15px; font-weight: 400; color: #888; 
+    box-shadow: none;
+}
+
+.form-2-box textarea { height: 120px; }
+
+.form-2-box input[type="text"]:focus,
+.form-2-box textarea:focus { outline: 0; background: #fff; border: 2px solid #db5d50; box-shadow: none; }
+
+.form-2-box input[type="text"]::-moz-placeholder,
+.form-2-box textarea::-moz-placeholder { color: #bbb; font-style: italic; }
+
+.form-2-box input[type="text"]:-ms-input-placeholder,
+.form-2-box textarea:-ms-input-placeholder { color: #bbb; font-style: italic; }
+
+.form-2-box input[type="text"]::-webkit-input-placeholder,
+.form-2-box textarea::-webkit-input-placeholder { color: #bbb; font-style: italic; }
+
+.form-2-box button.btn-customized {
+    margin-top: 1rem; padding: .75rem 1.5rem; 
+    background: #db5d50; border: 0; 
+    font-family: 'Open Sans', sans-serif; font-size: 15px; font-weight: 400; color: #fff; 
+    box-shadow: none;
+}
+
+.form-2-box button.btn-customized:hover, 
+.form-2-box button.btn-customized:active, 
+.form-2-box button.btn-customized:focus, 
+.form-2-box button.btn-customized:active:focus, 
+.form-2-box button.btn-customized.active:focus,
+.form-2-box button.btn.btn-primary:not(:disabled):not(.disabled):active,
+.form-2-box button.btn.btn-primary:not(:disabled):not(.disabled):active:focus {
+    outline: 0; background: #ca594d; border: 0; color: #fff; box-shadow: none;
+}
+
+
+.form-2-box .multi-select .multi-select-header .multi-select-header-option {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f3f4f7;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 5px;
+}
+.form-2-box .multi-select .multi-select-header .multi-select-header-placeholder {
+    color: #65727e;
+    font-size: 11px;
+}
+

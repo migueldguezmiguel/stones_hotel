@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="reservations_web_index" name="Reservations Index">
+        <t t-call="website.layout">
+            <t t-call-assets="stone_appointment.stone_embed_assets"/>
+            <div id="wrap" class="o_wappointment_wrap h-100 overflow-x-hidden">
+                <div class="container-lg o_appointment o_wappointment_select_operator h-100">
+                    <div class="row mt-4">
+                        <div class="col-8 col-md-8">
+                            <div class="oe_structure row mt-3">
+
+                                <nav class="d-print-none d-flex justify-content-between mb-4">
+                                    <a class="o_wappointment_navbar_link text-truncate"
+                                        t-attf-href="/web/reservation?#{keep_query()}">
+                                        <i class="fa fa-long-arrow-left me-2"/>All Appointments
+                                    </a>
+                                    <t t-call="stone_appointment.web_reservation_progress_bar">
+                                        <t t-set="step" t-value="10"/>
+                                    </t>
+                                </nav>
+                                <form id="package_form" class="o_mark_required form_reservations_appointment" data-mark="*">
+                                    <div class="row mt-4 form_reservations_appointment">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label class="col-form-label col-form-label-sm fw-bold" for="recurso_id">Resources:</label>
+                                                        <select id="recurso_id" name="recurso_id" class="form-control form-control-sm s_select_recurso" required="1">
+                                                            <option value="-1">Select an option...</option>
+                                                            <t t-foreach="recursos" t-as="c">
+                                                                <option t-att-value="c['id']" t-att-selected="c['id'] == recurso_id">
+                                                                    <t t-esc="c['name']"/>
+                                                                </option>
+                                                            </t>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="form-group">
+                                                        <label class="col-form-label col-form-label-sm fw-bold" for="package_id">Package:</label>
+                                                        <select id="package_id" name="package_id" class="form-control form-control-sm s_select_package">
+                                                            <option value="-1">Select an option...</option>
+                                                            <t t-foreach="packages" t-as="c">
+                                                                <option t-att-value="c.id" t-att-selected="c.id == package_id">
+                                                                    <t t-esc="c.name"/>
+                                                                </option>
+                                                            </t>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-4">
+                                                <div class="col-6">
+                                                    <div class="mb-3">
+                                                        <label for="internal_note" class="form-label">Notes</label>
+                                                        <textarea class="form-control form-control-sm" id="internal_note" rows="3"><t t-out="internal_note" /></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="col-form-label col-form-label-sm fw-bold" for="slot_dates">Select dates:</label>
+                                                    <input type="hidden" class="form-control" id="slot_dates" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                               <div class="col-12">
+                                                    <input type="hidden" id="csrf_token" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                                    <input type="hidden" id="date_start" name="date_start" value=""/>
+                                                </div>
+                                            </div>
+                                            <!--BOTONES  -->
+                                            <div class="oe_structure row mt-3">
+                                                <div class="form-group col-6">
+                                                    <br />
+                                                </div>
+                                                <div class="form-group col-6">
+                                                    <button type="button" class="btn btn-primary float-end mb32 s_btn_index">
+                                                        Register
+                                                        <span class="fa fa-long-arrow-right" />
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="reservations_web_extra" name="Reservations Extra">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_wappointment_wrap h-100 overflow-x-hidden">
+                <div class="container-lg o_appointment o_wappointment_select_operator h-100">
+                    <div class="row mt-4">
+                        <div class="col-8 col-md-8">
+                            <div class="oe_structure row mt-3">
+
+                                <nav class="d-print-none d-flex justify-content-between mb-4">
+                                    <a class="o_wappointment_navbar_link text-truncate"
+                                        t-attf-href="/web/reservation?#{keep_query()}">
+                                        <i class="fa fa-long-arrow-left me-2"/>All Appointments
+                                    </a>
+                                    <t t-call="stone_appointment.web_reservation_progress_bar">
+                                        <t t-set="step" t-value="20"/>
+                                    </t>
+                                </nav>
+                                <div class="container o_appointment_attendee_form">
+                                    <div class="row">
+                                        <div class="col form-2 section-description wow fadeIn">
+                                            <div class="divider-1 wow fadeInUp"><span></span></div>
+                                            <p>Permite agregar lineas de la cotización y las reservas.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <form id="package_form" class="o_mark_required form_reservations_appointment" data-mark="*">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- First / Last Name -->
+                                            <fieldset class="form-group border p-3">
+                                                <legend class="w-auto px-2">APPOINTMENTS AND GUEST</legend>
+                                                <div class="form-group">
+                                                    <label class="col-form-label col-form-label-sm" for="option_id">Options:</label>
+                                                    <select id="option_id" name="option_id" class="form-control form-control-sm s_select_options">
+                                                        <option value="-1">Select an option...</option>
+                                                        <t t-foreach="option_ids" t-as="c">
+                                                            <option t-att-value="c['id']" t-att-selected="c['id'] == option_id">
+                                                                <t t-esc="c['name']"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-form-label col-form-label-sm" for="guides">Number of guides:</label>
+                                                    <input type="number" class="form-control form-control-sm lastname" id="guides" name="guides" placeholder="0" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="col-form-label col-form-label-sm" for="guest_id">Guest:</label>
+                                                    <select id="guest_id" name="guest_id" class="form-control form-control-sm" multiple="1" data-placeholder="Select a guest"  data-select-all="false" data-multi-select="2" >
+                                                        <t t-foreach="contactos" t-as="c">
+                                                            <option t-att-value="c.id" t-att-selected="c.id == guest_id">
+                                                                <t t-esc="c.name"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <!-- About -->
+                                            <fieldset class="form-group border p-3">
+                                                <legend class="w-auto px-2">Extras</legend>
+                                                <t t-foreach="appointment_id.additional_fees_ids" t-as="af">
+                                                    <div class="form-check">
+                                                        <label class="col-form-label col-form-label-sm label_stn_lancha" for="john"><t t-out="af.name" /> </label>
+                                                        <input type="number" t-att-id="'int_af_%s'%(af.id)" t-att-name="'int_af_%s'%(af.id)" class="form-control form-control-sm" />
+                                                    </div>
+                                                </t>
+                                                <div class="form-group form-control-sm" >
+                                                    <small class="form-text">
+                                                        <i class="fa fa-users ms-2 me-1"></i>
+                                                        Extra fees
+                                                    </small>
+                                                </div>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                    <div class="oe_structure row">
+                                        <input type="hidden" id="csrf_token" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        <input type="hidden" id="additional_fees_ids" name="additional_fees_ids" t-att-value="appointment_id.additional_fees_ids.ids"/>
+                                        <input type="hidden" id="package_id" name="package_id" t-att-value="package_id"/>
+                                        <input type="hidden" id="recurso_id" name="recurso_id" t-att-value="recurso_id.id"/>
+                                        <input type="hidden" id="date_start" name="date_start" t-att-value="date_start"/>
+                                        <input type="hidden" id="date_stop" name="date_stop" t-att-value="date_stop"/>
+                                        <textarea style="display:none;" class="form-control form-control-sm" id="internal_note" rows="3"><t t-out="internal_note" /></textarea>
+                                    </div>
+                                    <!-- Submit Button  -->
+                                    <div class="oe_structure row mt-3">
+                                        <div t-attf-class="form-group col-6">
+                                            <button type="button" class="btn btn-primary float-end mb32 s_btn_next_extras">
+                                                Register
+                                                <span class="fa fa-long-arrow-right" />
+                                            </button>
+                                        </div>
+                                        <div t-attf-class="form-group col-6">
+                                            <button type="button" class="btn btn-primary float-end mb32 s_btn_next_dates">
+                                                Comfirm
+                                                <span class="fa fa-long-arrow-right" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <t t-if="stn_sale_id">
+                                <div class="row">
+                                   <div class="col-12">
+                                        <table class="table table-striped table-sm">
+                                            <thead class="">
+                                                <tr>
+                                                    <th scope="col"><strong>#</strong></th>
+                                                    <th><strong>Package</strong></th>
+                                                    <th><strong>Quantity</strong></th>
+                                                    <th><strong>Guides</strong></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            <t t-foreach="stn_sale_id.order_line" t-as="sol">
+                                                <t t-if="sol.display_type == 'line_section' ">
+                                                    <tr class="bg-secondary text-white">
+                                                        <td colspan="4"><strong class="text-uppercase font-bold" t-out="sol.name" /></td>
+                                                    </tr>
+                                                    <t t-set="indx_line" t-value="1"/>
+                                                </t>
+                                                <t t-if="sol.display_type != 'line_section' ">
+                                                    <tr class="bg-light">
+                                                        <td scope="row">
+                                                            <span class="" t-out="indx_line" />
+                                                        </td>
+                                                        <td>
+                                                            <span t-esc="sol.name" />
+                                                        </td>
+                                                        <td><span t-esc="sol.product_uom_qty" /></td>
+                                                        <td><span t-esc="sol.get_anglers_guides()" /></td>
+                                                    </tr>
+                                                    <t t-set="angler_id" t-value="sol.get_anglers()" />
+                                                    <tr t-if="angler_id">
+                                                        <td colspan="4">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <t t-if="angler_id.guest_ids">
+                                                                        <div class="row">
+                                                                            <div class="col-12">
+                                                                                <strong>Guests</strong>
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                                <t t-foreach="angler_id.guest_ids" t-as="guest">
+                                                                                    <span class="" t-out="guest.name" /><br />
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </t>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <t t-set="indx_line" t-value=" indx_line + 1"/>
+                                                </t>
+                                            </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <aside class="o_appointment_details_column o_not_editable col-12 col-md-4 col-lg-3 offset-lg-1 position-relative">
+                            <article class="card o_appointment_user_short_card card" itemscope="itemscope" itemtype="http://schema.org/Employee">
+                                <header class="bg-secondary rounded-top o_appointment_avatar_container ratio ratio-4x3">
+                                    <div t-attf-style="background-image: url('/web/image/sale.resources/#{recurso.id}/image_1920');"
+                                            class="o_appointment_avatar_background"/>
+                                </header>
+                                <main class="card-body">
+                                    <h5 t-if="product_tmpl_id" t-out="product_tmpl_id and product_tmpl_id.name or ''"/>
+                                    <div class="o_appointment_card_user_fct mb-2 text-muted">
+                                        <div t-out="recurso.name or ''" placeholder="Add a function here..."/>
+                                    </div>
+                                    <div class="list-group-flush">
+                                        <div t-if="date_start" class="list-group-item d-flex align-items-center">
+                                            <i class="fa fa-calendar fa-fw me-2 text-muted"/>
+                                            <span class="text-truncate"><t t-out="date_start.date()"/> - <t t-out="date_stop.date()"/></span>
+                                        </div>
+                                        <div t-if="total_guias" class="list-group-item d-flex align-items-center">
+                                            <i class="fa fa-users fa-fw me-2 text-muted"/>
+                                            <span class="text-truncate">Guides Available: <t t-out="total_guias"/></span>
+                                        </div>
+                                        <div t-if="total_habitaciones" class="list-group-item d-flex align-items-center">
+                                            <i class="fa fa-users fa-fw me-2 text-muted"/>
+                                            <span class="text-truncate">Available Rooms: <t t-out="total_habitaciones"/></span>
+                                        </div>
+                                        <div t-if="stn_sale_id" class="list-group-item d-flex align-items-center">
+                                            <i class="fa fa-id-card-o fa-fw me-2 text-muted"/>
+                                            <span class="text-truncate">Quotations: <t t-out="stn_sale_id and stn_sale_id.name or '' "/></span>
+                                        </div>
+                                    </div>
+                                </main>
+                            </article><br />
+                            <div t-if="internal_note" class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <i class="fa fa-align-left fa-fw me-2 text-muted"/>
+                                        Notes
+                                    </h5>
+                                    <p class="card-text"><t t-out="internal_note" /></p>
+                                </div>
+                            </div>                            
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="reservations_web_comfirm" name="Reservations Extra">
+        <t t-call="website.layout">
+            <div id="wrap" class="o_wappointment_wrap h-100 overflow-x-hidden">
+                <div class="container-lg o_appointment o_wappointment_select_operator h-100">
+                    <div class="row mt-4">
+                        <div class="col-8 col-md-8">
+                            <div class="oe_structure row mt-3">
+                                <nav class="d-print-none d-flex justify-content-between mb-4">
+                                    <a class="o_wappointment_navbar_link text-truncate"
+                                        t-attf-href="/web/reservation?#{keep_query()}">
+                                        <i class="fa fa-long-arrow-left me-2"/>All Appointments
+                                    </a>
+                                    <t t-call="stone_appointment.web_reservation_progress_bar">
+                                        <t t-set="step" t-value="30"/>
+                                    </t>
+                                </nav>
+                                <div class="container o_appointment_attendee_form">
+                                    <div class="row">
+                                        <div class="col form-2 section-description wow fadeIn">
+                                            <div class="divider-1 wow fadeInUp"><span></span></div>
+                                            <p>Permite agregar lineas de la cotización y las reservas.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="web_reservation_progress_bar" name="Reservation TABS" track="1">
+        <t t-set="STEP_PACKAGE" t-value="10"/>
+        <t t-set="STEP_GUEST_EXTRA" t-value="20"/>
+        <t t-set="STEP_FORM" t-value="30"/>
+        <t t-set="STEP_VALIDATION" t-value="40"/>
+        <ul class="o_wappointment_progress_bar list-unstyled d-none d-lg-flex m-0">
+            <li class="d-flex align-items-center">
+                <a t-att-class="'text-decoration-none text-truncate ' + (step==STEP_PACKAGE and 'fw-bold text-reset cursor-default' or step&gt;STEP_PACKAGE and ' ' or 'cursor-default text-muted')"
+                   t-att-href="'#' if step&lt;STEP_PACKAGE or step==STEP_PACKAGE else '/web/reservation?%s'%keep_query('*')  ">
+                Package
+                </a>
+                <span class="d-inline-block mx-sm-3 fa fa-angle-right text-muted fs-5"/>
+            </li>
+            <li class="d-flex align-items-center">
+                <a t-att-class="'text-decoration-none text-truncate ' + (step==STEP_GUEST_EXTRA and 'fw-bold text-reset cursor-default' or step&gt;STEP_GUEST_EXTRA and ' ' or 'cursor-default text-muted')"
+                   t-att-href="'#' if step&lt;STEP_GUEST_EXTRA or step==STEP_GUEST_EXTRA else '/web/reservation/extra?%s'%(keep_query('*'))  ">
+                Extra
+                </a>
+                <span class="d-inline-block mx-sm-3 fa fa-angle-right text-muted fs-5"/>
+            </li>
+            <li t-att-class="'d-flex align-items-center ' + (step==STEP_VALIDATION and 'fw-bold cursor-default' or step&gt;STEP_VALIDATION and 'cursor-default text-primary' or 'cursor-default text-muted')">
+                Confirm<span class="d-inline-block mx-sm-3 fa fa-angle-right text-muted fs-5"/>
+            </li>
+        </ul>
+    </template>
+
+</odoo>

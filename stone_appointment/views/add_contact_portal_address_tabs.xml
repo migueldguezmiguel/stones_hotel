@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <template id="contact_child_card">
+            <div class="row"><div class="col-12 mt-3">
+                <span><a t-attf-href="/my/#{partner.name}/contact/add?type=#{type}" class="btn btn-primary pull-left mb32">ADD</a></span>
+            </div></div>
+            <t t-if="partner.mapped('child_ids').filtered(lambda x: x.type == type)">
+                <div class="row row-cols-3">
+                    <t t-foreach="partner_children" t-as="child_partner">
+                        <div class="col-4 mb-3">
+                            <div class="card h-100 border-secondary">
+                                <div class="card-body pl-3 w-33">
+                                    <div class="row">
+                                        <div class="col-12" id="card_body">
+                                            <div class="card-title font-weight-bold" style="font-size: 14px">
+                                                <span t-field="child_partner.name"/><span>, </span>
+                                                <span t-field="child_partner.parent_id.name"/>
+                                            </div>
+                                            <div class="card-text" style="font-size: 13px;"><span t-field="child_partner.city"/></div>
+                                            <div class="card-text" style="font-size: 13px"><span t-field="child_partner.country_id.name"/></div>
+                                            <div class="card-text" style="font-size: 13px"><div t-field="child_partner.email"/></div>
+                                            <div class="card-text" style="font-size: 13px"><span t-field="child_partner.phone"/></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </template>
+
+        <template id="contact_address_type_tabs" inherit_id="portal.portal_my_details">
+            <xpath expr="//form" position="after">
+                <div class="mb-5">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                      <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" role="tab" aria-controls="other" aria-selected="false">Other</button>
+                      </li>
+                      <li class="nav-item" role="presentation" style="display:none">
+                        <button class="nav-link active" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" role="tab" aria-controls="contact" aria-selected="true">Contact</button>
+                      </li>
+                      <li class="nav-item" role="presentation" style="display:none">
+                        <button class="nav-link" id="invoice-tab" data-bs-toggle="tab" data-bs-target="#invoice" role="tab" aria-controls="invoice" aria-selected="false">Invoice</button>
+                      </li>
+                      <li class="nav-item" role="presentation" style="display:none">
+                        <button class="nav-link" id="delivery-tab" data-bs-toggle="tab" data-bs-target="#delivery" role="tab" aria-controls="delivery" aria-selected="false">Delivery</button>
+                      </li>
+
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <t t-foreach="['other', 'contact', 'invoice', 'delivery']" t-as="type">
+                            <div t-att-class="'tab-pane fade %s' % ('show active' if type=='other' else '')" t-att-id="type" role="tabpanel" t-attf-aria-labelledby="{{type}}-tab"><div>
+                                <t t-call="stone_appointment.contact_child_card">
+                                    <t t-set="partner_children" t-value="partner.mapped('child_ids').filtered(lambda x: x.type == type)"/>
+                                </t>
+                            </div></div>
+                        </t>
+                    </div>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

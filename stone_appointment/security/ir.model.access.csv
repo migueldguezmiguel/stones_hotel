@@ -1,0 +1,8 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_sale_line_angler_manager,sale_line_angler_manager,model_sale_line_angler,,1,1,1,1
+access_sale_resources_manager,sale_resources_manager,model_sale_resources,,1,1,1,1
+access_sale_additional_fees_manager,sale_additional_fees_manager,model_sale_additional_fees,,1,1,1,1
+access_line_angler_additional_fees_manager,line_angler_additional_fees_manager,model_line_angler_additional_fees,,1,1,1,1
+
+access_sale_order_anglers_wizard,sale_order_anglers_wizard,model_sale_order_anglers_wizard,,1,1,1,1
+access_sale_order_anglers_line,sale_order_anglers_line,model_sale_order_anglers_line,,1,1,1,1

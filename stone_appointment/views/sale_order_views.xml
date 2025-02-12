@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- SALE ORDER -->
+    <record id="view_sale_additional_fees_tree" model="ir.ui.view">
+        <field name="name">view_sale_additional_fees_tree</field>
+        <field name="model">sale.additional.fees</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Additional Fees" duplicate="false" sample="1">
+                <field name='sequence' widget='handle'/>
+                <field name="name"/>
+                <field name="product_id"/>
+                <field colspan="4" name="description" optional="show" />
+                <field name="active" column_invisible="True"/>
+            </tree>
+        </field>
+    </record>
+    <record id="view_sale_additional_fees_form" model="ir.ui.view">
+        <field name="name">view_sale_additional_fees_form</field>
+        <field name="model">sale.additional.fees</field>
+        <field name="arch" type="xml">
+            <form string="Sale Additional Fees">
+                <sheet name="additional_form">
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Massages"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+                            <field name="description" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_sale_additional_fees_search" model="ir.ui.view">
+        <field name="name">sale_additional_fees_search</field>
+        <field name="model">sale.additional.fees</field>
+        <field name="arch" type="xml">
+            <search string="Sale Additional Fees">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>    
+    <record id="sale_additional_fees_action" model="ir.actions.act_window">
+        <field name="name">Sale Additional Fees</field>
+        <field name="res_model">sale.additional.fees</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new resources
+            </p>
+        </field>
+    </record>
+
+
+    <record id="view_sale_resources_tree" model="ir.ui.view">
+        <field name="name">view_sale_resources_tree</field>
+        <field name="model">sale.resources</field>
+        <field name="arch" type="xml">
+            <tree string="Resources" duplicate="false" sample="1">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_sale_resources_form" model="ir.ui.view">
+        <field name="name">view_sale_resources_form</field>
+        <field name="model">sale.resources</field>
+        <field name="arch" type="xml">
+            <form string="Resources">
+                <sheet name="resource_form">
+                    <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
+                    <div class="oe_title">
+                        <label for="name" string="Resource Name"/>
+                        <h1>
+                            <div class="d-flex">
+                                <field class="text-break" name="name" options="{'line_breaks': False}" widget="text" placeholder="Playa Blanca"/>
+                            </div>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="resource_ids" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="sale_resources_action" model="ir.actions.act_window">
+        <field name="name">Resources</field>
+        <field name="res_model">sale.resources</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new resources
+            </p>
+        </field>
+    </record>
+
+    <record id="view_order_form_reser" model="ir.ui.view">
+        <field name="name">view_order_form_reser</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Anglers" name="anglers">
+                    <group>
+                        <group>
+                            <field name="appointment_id" />
+                            <field name="recurso_id" />
+                            <field name="stn_date_start" widget="date" />
+                            <field name="stn_date_stop" widget="date" />
+                            <field name="event_id" />                            
+                        </group>
+                        <group name="group_create_anglers" string="Create Anglers">
+                            <div class="content-group" colspan="2">
+                                <a type='object' name='action_create_anglers' class="btn btn-link" role="button">
+                                    <i class="oi oi-fw o_button_icon oi-arrow-right"/> Create Anglers
+                                </a>
+                            </div>
+                            <div class="content-group" colspan="2" invisible="event_id != False">
+                                <a type='object' name='action_create_event' class="btn btn-link" role="button">
+                                    <i class="oi oi-fw o_button_icon oi-arrow-right"/> Create Event
+                                </a>
+                            </div>                            
+                        </group>
+                    </group>
+                    <field name="angler_line" widget="one2many" mode="tree,kanban">
+                        <tree string="Angler Lines" limit="200" >
+                            <field name="resource_ids" widget="many2many_tags" optional="show" />
+                            <field name="guides_ids" widget="many2many_tags" optional="show" />
+                            <field name="guest_ids" widget="many2many_tags" optional="show" />
+                            <button name="action_edit_angler"
+                                    type="object"
+                                    icon="fa-pencil"
+                                    string="Edit"
+                                    aria-label="Edit"
+                                    class="float-end"
+                                    context="{'default_action': 'change_period'}"/>
+
+                            <field name="stn_date_start" column_invisible="True" />
+                            <field name="stn_date_stop" column_invisible="True" />                                    
+                            <field name="option_id" column_invisible="True" />
+                            <field name="total_guides" column_invisible="True" />
+                            <field name="line_id" column_invisible="True" />
+                            <field name="order_id" column_invisible="True" />
+                        </tree>
+                        <form>
+                            <group>
+                                <group>
+                                    <field name="stn_date_start" readonly="1" />
+                                    <field name="stn_date_stop" readonly="1" />
+                                    <field name="total_guides" readonly="1" />
+                                    <field name="line_id" invisible="True" readonly="1" />
+                                    <field name="order_id" invisible="True" />
+                                </group>
+                                <group>
+                                    <field name="resource_ids" widget="many2many_tags" readonly="1" />
+                                    <field name="guides_ids" widget="many2many_tags" readonly="1" />
+                                    <field name="guest_ids" widget="many2many_tags" readonly="1" />
+                                </group>
+                            </group>
+                            <group>
+                                <field name="fees_line_ids" widget="one2many" mode="tree,kanban">
+                                    <tree string="Fees Lines" limit="200" create="false" delete="false" editable="false">
+                                        <field name="additional_fees_id" readonly="1" />
+                                        <field name="extra" readonly="1" />
+                                        <field name="sale_order_id" readonly="1" column_invisible="True" />
+                                        <field name="angler_id" readonly="1" column_invisible="True" />
+                                    </tree>
+                                </field>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
+

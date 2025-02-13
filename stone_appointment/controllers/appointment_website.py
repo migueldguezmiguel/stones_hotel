@@ -58,9 +58,11 @@ class AppointmentCalendarControllerCustom(AppointmentCalendarController):
             if request.session.stn_sale_id:
                 redirect_url = "/web/reservation"
                 request.session["stn_sale_id"] = False
+                request.session["stn_indx_data"] = {}
             else:
                 redirect_url = "/web/reservation"
-                request.session["stn_sale_id"] = False                
+                request.session["stn_sale_id"] = False
+                request.session["stn_indx_data"] = {}
         return request.redirect(redirect_url)
 
 
@@ -74,11 +76,7 @@ class AppointmentControllerWebsite(http.Controller):
         RecursosModel = request.env['sale.resources'].sudo()
         TypeModel = request.env['appointment.type'].sudo()
 
-        sale_id = None
-        if request.session.stn_sale_id:
-            sale_id = SaleOrderModel.browse( request.session.stn_sale_id )
-            if not sale_id.exists():
-                request.session["stn_sale_id"] = False
+        sale_id = SaleOrderModel.get_saleorder_portal_reservation()
 
         internal_note = ""
         if request.session.stn_indx_data:
@@ -107,7 +105,6 @@ class AppointmentControllerWebsite(http.Controller):
             date_stop = datetime.today().date()
 
         slots_rules = []
-
         params = {
             "packages": packages,
             "package_id": int(package_id or 0),
@@ -124,7 +121,7 @@ class AppointmentControllerWebsite(http.Controller):
 
             "internal_note": internal_note,
 
-            **kwargs        
+            **kwargs
         }
         return request.render(
             "stone_appointment.reservations_web_index", 
@@ -136,7 +133,7 @@ class AppointmentControllerWebsite(http.Controller):
         AppointmentModel = request.env['appointment.type'].sudo()
         CalendarModel = request.env['calendar.event'].sudo()
         PartnerModel = request.env['res.partner'].sudo()
-        SaleModel = request.env['sale.order'].sudo()
+        SaleOrderModel = request.env['sale.order'].sudo()
         SaleResourceModel = request.env['sale.resources'].sudo()
         TemplateModel = request.env['product.template'].sudo()
         AttributeModel = request.env['product.attribute'].sudo()
@@ -159,11 +156,7 @@ class AppointmentControllerWebsite(http.Controller):
             for line in tmp.attribute_line_ids:
                 option_ids = AttributeModel.get_ws_product_attribute_value(attribute_id=line.attribute_id)
 
-        sale_id = False
-        if request.session.stn_sale_id:
-            sale_id = SaleModel.browse( request.session.stn_sale_id )
-            if not sale_id.exists():
-                request.session["stn_sale_id"] = False
+        sale_id = SaleOrderModel.get_saleorder_portal_reservation()
 
         # Clientes
         partner = request.env.user.partner_id
@@ -205,17 +198,21 @@ class AppointmentControllerWebsite(http.Controller):
     @route(['/web/reservation/viewcomfirm'], type='http', auth="user", website=True, sitemap=True)
     def website_reservation_viewcomfirm(self, package_id="", recurso_id="", date_start="", date_stop="", **kwargs):
         SaleOrderModel = request.env['sale.order'].sudo()
-        sale_id = False
-        if request.session.stn_sale_id:
-            sale_id = SaleOrderModel.browse( request.session.stn_sale_id )
-            if not sale_id.exists():
-                request.session["stn_sale_id"] = False
-
+        sale_id = SaleOrderModel.get_saleorder_portal_reservation()
+        print("---- sale_id", sale_id)
         if sale_id:
             url_request = '/calendar/view/%s?partner_id=%s'%( sale_id.event_id.access_token, request.env.user.partner_id.id)
             request.session["stn_sale_id"] = False
+            request.session["stn_indx_data"] = {}
             return request.redirect(url_request)
 
+        params = {
+            "package_id": package_id,
+            "recurso_id": recurso_id,
+            "date_start": date_start,
+            "date_stop": date_stop,
+            "stn_sale_id": sale_id,
+        }
         return request.render(
             "stone_appointment.reservations_web_comfirm", 
             params, 
@@ -223,6 +220,21 @@ class AppointmentControllerWebsite(http.Controller):
         )
 
     # Realiza calculos JSON
+    @http.route(['/web/reservation/cancel'], type='json', auth='user', website=True)
+    def web_reservation_cancel(self, **kwargs):
+        SaleOrderModel = request.env['sale.order'].sudo()
+        sale_id = SaleOrderModel.get_saleorder_portal_reservation()
+        if sale_id.event_id:
+            redirect_url = '/calendar/view/%s?partner_id=%s'%( sale_id.event_id.access_token, request.env.user.partner_id.id)
+            return {"redirect_url": redirect_url}
+        elif sale_id:
+            sale_id.action_cancel()
+            return {"redirect_url": "/web/reservation"}
+        else:
+            return {"redirect_url": "/web/reservation"}
+        return {}
+
+
     @http.route('/stn_reservation/extra', type='json', auth='user', methods=['POST'])
     def stn_reservation_extra(self, package_id="", recurso_id="", date_start="", date_stop="", internal_note="", **kwargs):
         params = {
@@ -261,11 +273,7 @@ class AppointmentControllerWebsite(http.Controller):
     @http.route(['/web/reservation/comfirm'], type='json', auth='user', website=True)
     def web_reservation_comfirm(self, **kwargs):
         SaleOrderModel = request.env['sale.order'].sudo()
-        sale_id = False
-        if request.session.stn_sale_id:
-            sale_id = SaleOrderModel.browse( request.session.stn_sale_id )
-            if not sale_id.exists():
-                request.session["stn_sale_id"] = False
+        sale_id = SaleOrderModel.get_saleorder_portal_reservation()
         if sale_id:
             sale_id.action_create_website_event(datas=kwargs)
         return {}
@@ -282,9 +290,8 @@ class AppointmentControllerWebsite(http.Controller):
             for week in slot.get("weeks"):
                 datas.append({
                     "id": week,
-                    "text": week
+                    "text": week,
+                    "create": True
                 })
         return datas
-
-
 

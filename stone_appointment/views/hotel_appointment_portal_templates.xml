@@ -72,7 +72,7 @@
                         </div>
                         <div class="d-flex py-1 px-0 bg-transparent o-cc1-text border-0">
                             <i class="fa fa-users fa-fw me-2 mt-1 text-muted"/>
-                            <span t-if="event.stn_no_personas">Number of Attendees: <t t-out="event.stn_no_personas"/> </span>
+                            <span t-if="event.stn_no_personas">Number of Guests: <t t-out="event.stn_no_personas"/> </span>
                         </div>
                         <div class="d-flex py-1 px-0 bg-transparent o-cc1-text border-0" t-if="event.stn_no_habitaciones > 0.0">
                             <i class="fa fa-users fa-fw me-2 mt-1 text-muted"/>

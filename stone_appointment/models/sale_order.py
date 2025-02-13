@@ -192,6 +192,7 @@ class SaleOrder(models.Model):
         datas = {}
         result = self.action_create_website_event(datas=datas)
         request.session["stn_sale_id"] = False
+        request.session["stn_indx_data"] = {}
         return result
 
     def action_create_anglers(self):
@@ -297,11 +298,7 @@ class SaleOrder(models.Model):
             return product_id
 
         def get_sale_order_id(date_start, appointment_id, recurso_id, internal_note=""):
-            sale_id = False
-            if request.session.stn_sale_id:
-                sale_id = self.browse( request.session.stn_sale_id )
-                if not sale_id.exists():
-                    request.session["stn_sale_id"] = False
+            sale_id = self.get_saleorder_portal_reservation()
             if not request.session.stn_sale_id:
                 partner_id = request.env.user.partner_id
                 vals_sale = {
@@ -315,9 +312,10 @@ class SaleOrder(models.Model):
                     'internal_note': internal_note,
                     'user_id': request.env.user.id
                 }
-                print("---- vals_sale", vals_sale)
                 sale_id = self.create(vals_sale)
                 request.session["stn_sale_id"] = sale_id.id
+            if sale_id:
+                sale_id.internal_note = request.session["stn_indx_data"].get("internal_note") or ""
             return sale_id
 
         AppointmentModel = self.env["appointment.type"].sudo()
@@ -336,8 +334,9 @@ class SaleOrder(models.Model):
         option_id = int(datas.get("option_id"))
         additional_fees = datas.get("additional_fees")
         internal_note = ""
+        print("---------- request.session.stn_indx_data", request.session.stn_indx_data)
         if request.session.stn_indx_data:
-            internal_note = request.session["stn_indx_data"].get("internal_note")        
+            internal_note = request.session["stn_indx_data"].get("internal_note") or ""
         
         guest_ids =  datas.get("guest_ids", [])
         start_dt =  datas.get("date_start", "") and datas["date_start"].replace(" 00:00:00", "") or ""
@@ -440,10 +439,6 @@ class SaleOrder(models.Model):
         else:
             line_charges_id.product_uom_qty = line_charges_id.product_uom_qty + len(guest_ids)
 
-
-
-
-
         angler_id = AnglerLineModel.create({
             'option_id': option_id,
             'order_id': sale_id.id,
@@ -502,6 +497,17 @@ class SaleOrder(models.Model):
                 interval=1):
                 print("---------- day_dt", day_dt)
         return []
+
+
+    # PORTAL
+    def get_saleorder_portal_reservation(self):
+        order_id = request.session.stn_sale_id
+        sale_id = self.search([("id", "=", order_id), ("state", "!=", "cancel")])
+        if not sale_id.exists():
+            sale_id = False
+            request.session["stn_sale_id"] = False
+            # request.session["stn_indx_data"] = {}
+        return sale_id
 
 
 class SaleOrderLine(models.Model):

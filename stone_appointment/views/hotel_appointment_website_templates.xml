@@ -65,7 +65,7 @@
                                             <div class="row">
                                                <div class="col-12">
                                                     <input type="hidden" id="csrf_token" name="csrf_token" t-att-value="request.csrf_token()"/>
-                                                    <input type="hidden" id="date_start" name="date_start" value=""/>
+                                                    <input type="hidden" id="date_start" name="date_start" t-att-value="date_start"/>
                                                 </div>
                                             </div>
                                             <!--BOTONES  -->
@@ -113,7 +113,7 @@
                                     <div class="row">
                                         <div class="col form-2 section-description wow fadeIn">
                                             <div class="divider-1 wow fadeInUp"><span></span></div>
-                                            <p>Permite agregar lineas de la cotización y las reservas.</p>
+                                            <p>New Reservation Details.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -122,7 +122,7 @@
                                         <div class="col-md-6">
                                             <!-- First / Last Name -->
                                             <fieldset class="form-group border p-3">
-                                                <legend class="w-auto px-2">APPOINTMENTS AND GUEST</legend>
+                                                <legend class="w-auto px-2">RESERVATIONS AND GUESTS</legend>
                                                 <div class="form-group">
                                                     <label class="col-form-label col-form-label-sm" for="option_id">Options:</label>
                                                     <select id="option_id" name="option_id" class="form-control form-control-sm s_select_options">
@@ -180,18 +180,24 @@
                                     </div>
                                     <!-- Submit Button  -->
                                     <div class="oe_structure row mt-3">
-                                        <div t-attf-class="form-group col-6">
+                                        <div t-attf-class="form-group col-4">
                                             <button type="button" class="btn btn-primary float-end mb32 s_btn_next_extras">
                                                 Register
                                                 <span class="fa fa-long-arrow-right" />
                                             </button>
                                         </div>
-                                        <div t-attf-class="form-group col-6">
+                                        <div t-if="stn_sale_id" t-attf-class="form-group col-4">
                                             <button type="button" class="btn btn-primary float-end mb32 s_btn_next_dates">
                                                 Comfirm
                                                 <span class="fa fa-long-arrow-right" />
                                             </button>
                                         </div>
+                                        <div t-attf-class="form-group col-4">
+                                            <button type="button" class="btn btn-primary float-end mb32 s_btn_clear_reservation">
+                                                Clear Reservation
+                                                <span class="fa fa-long-arrow-right" />
+                                            </button>
+                                        </div>                                        
                                     </div>
                                 </form>
                             </div>
@@ -275,7 +281,7 @@
                                         </div>
                                         <div t-if="total_guias" class="list-group-item d-flex align-items-center">
                                             <i class="fa fa-users fa-fw me-2 text-muted"/>
-                                            <span class="text-truncate">Guides Available: <t t-out="total_guias"/></span>
+                                            <span class="text-truncate">Available Guides: <t t-out="total_guias"/></span>
                                         </div>
                                         <div t-if="total_habitaciones" class="list-group-item d-flex align-items-center">
                                             <i class="fa fa-users fa-fw me-2 text-muted"/>
@@ -294,9 +300,10 @@
                                         <i class="fa fa-align-left fa-fw me-2 text-muted"/>
                                         Notes
                                     </h5>
-                                    <p class="card-text"><t t-out="internal_note" /></p>
+                                    <p class="card-text mb-2 text-muted"><t t-out="internal_note" /></p>
                                 </div>
-                            </div>                            
+                            </div>
+                            <br /><br />
                         </aside>
                     </div>
                 </div>

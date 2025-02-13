@@ -13,6 +13,7 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
         'click .s_btn_index': 'onClickViewValidateIndex',
         'click .s_btn_next_extras': 'onClickViewValidateExtras',
         'click .s_btn_next_dates': 'onClickViewValidateEvent',
+        'click .s_btn_clear_reservation': 'onClickViewClearReservation',
     },
     duration: 350,
 
@@ -31,6 +32,7 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
     willStart: async function () {
         const res = this._super(...arguments);
         this.preFillValues = {};
+        $("#package_id").trigger("change");
         return res;
     },
 
@@ -41,26 +43,34 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
             sticky: true
         });
     },
-
-    onChangeViewPackage: async function (ev) {     
+    onClickViewClearReservation: async function (ev) {
         ev.preventDefault();
         const elem = ev.currentTarget;
-
-        var package_id = $("#package_id option:selected").val();
-        function format(item) { return item.text; }
-
-        const resultSlots = await this.rpc("/web/reservation/slots", {
-            package_id: package_id,
-        });
-        if (resultSlots) {
-            $("#slot_dates").select2({
-                data: resultSlots,
-                formatSelection: format,
-                formatResult: format,
-                placeholder: "Select a date",
-                allowClear: true
-            });
+        const resultCancel = await this.rpc("/web/reservation/cancel", {});
+        if (resultCancel.redirect_url) {
+            document.location = encodeURI(resultCancel.redirect_url);
             return true;
+        }
+    },
+    onChangeViewPackage: async function (ev) {
+        ev.preventDefault();
+        const elem = ev.currentTarget;
+        var package_id = $("#package_id option:selected").val();
+        if(package_id){
+            function format(item) { return item.text; }
+            const resultSlots = await this.rpc("/web/reservation/slots", {
+                package_id: package_id,
+            });
+            if (resultSlots) {
+                $("#slot_dates").select2({
+                    data: resultSlots,
+                    formatSelection: format,
+                    formatResult: format,
+                    placeholder: "Select a date",
+                    allowClear: true
+                });
+                return true;
+            }
         }
         return true;
     },
@@ -68,8 +78,8 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
         ev.preventDefault();
         var package_id = $("#package_id option:selected").val();
         var recurso_id = $("#recurso_id option:selected").val();
-        var date_start = $("#date_start").val();
         var date_stop = $("#date_stop").val();
+        var date_start = $("#date_start").val();
         var internal_note = $("#internal_note").val();
         if(package_id == '-1' || package_id == -1){
             this.onViewNotification("Please select a package");
@@ -80,9 +90,13 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
             return false;
         }
         var slotValue = this.$('#slot_dates').select2('data');
-        if(slotValue == null){
-            this.onViewNotification("Please select the start date");
-            return false;
+        if(slotValue){
+            if(slotValue.id){
+                console.log("---------- slotValueTEXT", slotValue.text)
+            }else{
+                this.onViewNotification("Please select the start date");
+                return false;
+            }
         }
         const updateSaleOrder = await this.rpc("/stn_reservation/extra", {
             package_id: package_id,

@@ -166,6 +166,16 @@
                                                         Extra fees
                                                     </small>
                                                 </div>
+                                                <div class="form-group">
+                                                    <label class="col-form-label col-form-label-sm" for="guia_id">Guides:</label>
+                                                    <select id="guia_id" name="guia_id" class="form-control form-control-sm" multiple="1" data-placeholder="Select the guides"  data-select-all="false" data-multi-select="2" >
+                                                        <t t-foreach="guias" t-as="c">
+                                                            <option t-att-value="c.id" t-att-selected="c.id == guia_id">
+                                                                <t t-esc="c.name"/>
+                                                            </option>
+                                                        </t>
+                                                    </select>
+                                                </div>                                                
                                             </fieldset>
                                         </div>
                                     </div>
@@ -188,7 +198,7 @@
                                         </div>
                                         <div t-if="stn_sale_id" t-attf-class="form-group col-4">
                                             <button type="button" class="btn btn-primary float-end mb32 s_btn_next_dates">
-                                                Comfirm
+                                                Confirm
                                                 <span class="fa fa-long-arrow-right" />
                                             </button>
                                         </div>

@@ -148,6 +148,7 @@ class AppointmentControllerWebsite(http.Controller):
 
         # Guias
         guias = appointment_id.get_guias_disponibles(date_start, date_stop)
+        print("----------- guias", guias)
         habitaciones = appointment_id.get_recursos_disponibles(recurso_id, date_start, date_stop)
 
         # Opciones
@@ -199,7 +200,6 @@ class AppointmentControllerWebsite(http.Controller):
     def website_reservation_viewcomfirm(self, package_id="", recurso_id="", date_start="", date_stop="", **kwargs):
         SaleOrderModel = request.env['sale.order'].sudo()
         sale_id = SaleOrderModel.get_saleorder_portal_reservation()
-        print("---- sale_id", sale_id)
         if sale_id:
             url_request = '/calendar/view/%s?partner_id=%s'%( sale_id.event_id.access_token, request.env.user.partner_id.id)
             request.session["stn_sale_id"] = False

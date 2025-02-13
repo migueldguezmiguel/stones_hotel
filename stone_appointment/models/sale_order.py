@@ -91,8 +91,19 @@ class SaleLineAngler(models.Model):
         string="Guides",
         readonly=False, 
         copy=False, 
-        context={'active_test': False})
+        context={'active_test': False})    
     total_guides = fields.Integer(string="Number of Guides")
+
+    pref_guides_ids = fields.Many2many(
+        'res.partner', 
+        'sale_line_angler_prefguide_rel', 
+        'angler_id', 
+        'guide_id',
+        string="Preferred Guides",
+        readonly=False, 
+        copy=False, 
+        context={'active_test': False})
+
 
     guest_ids = fields.Many2many(
         'res.partner', 
@@ -334,11 +345,11 @@ class SaleOrder(models.Model):
         option_id = int(datas.get("option_id"))
         additional_fees = datas.get("additional_fees")
         internal_note = ""
-        print("---------- request.session.stn_indx_data", request.session.stn_indx_data)
         if request.session.stn_indx_data:
             internal_note = request.session["stn_indx_data"].get("internal_note") or ""
         
         guest_ids =  datas.get("guest_ids", [])
+        pref_guides_ids =  datas.get("guia_ids", [])
         start_dt =  datas.get("date_start", "") and datas["date_start"].replace(" 00:00:00", "") or ""
         end_dt =  datas.get("date_stop", "") and datas["date_stop"].replace(" 00:00:00", "") or ""
         if isinstance(start_dt, str):
@@ -444,6 +455,7 @@ class SaleOrder(models.Model):
             'order_id': sale_id.id,
             'line_id': sale_line_id.id,
             'guest_ids': guest_ids,
+            'pref_guides_ids': pref_guides_ids,
             'total_guides': len(guides_ids),
             "guides_ids": guides_ids,
             "resource_ids": resource_ids,
@@ -508,7 +520,6 @@ class SaleOrder(models.Model):
             request.session["stn_sale_id"] = False
             # request.session["stn_indx_data"] = {}
         return sale_id
-
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

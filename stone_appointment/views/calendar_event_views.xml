@@ -34,11 +34,14 @@
                         <group name="angler_details" string="Anglers">
                             <field name="stn_angler_ids" string="Anglers" widget="many2many_tags" />
                         </group>
-                        <group name="guides_details" string="Anglers">
-                            <field name="stn_guides_ids" string="Guides" widget="many2many_tags" />
-                        </group>
                         <group name="resource_details" string="Resources">
                             <field name="resource_ids" string="Resource" widget="many2many_tags" />
+                        </group>
+                        <group name="guides_details" string="Guides">
+                            <field name="stn_guides_ids" string="Guides" widget="many2many_tags" />
+                        </group>
+                        <group name="stn_pref_guides_ids" string="Preferred Guides">
+                            <field name="stn_pref_guides_ids" string="Preferred Guides" widget="many2many_tags" />
                         </group>
                     </group>
                 </page>

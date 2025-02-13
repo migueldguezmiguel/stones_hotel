@@ -139,6 +139,7 @@
                             <field name="resource_ids" widget="many2many_tags" optional="show" />
                             <field name="guides_ids" widget="many2many_tags" optional="show" />
                             <field name="guest_ids" widget="many2many_tags" optional="show" />
+                            <field name="pref_guides_ids" widget="many2many_tags" optional="show" />
                             <button name="action_edit_angler"
                                     type="object"
                                     icon="fa-pencil"
@@ -165,8 +166,9 @@
                                 </group>
                                 <group>
                                     <field name="resource_ids" widget="many2many_tags" readonly="1" />
-                                    <field name="guides_ids" widget="many2many_tags" readonly="1" />
                                     <field name="guest_ids" widget="many2many_tags" readonly="1" />
+                                    <field name="guides_ids" widget="many2many_tags" readonly="1" />
+                                    <field name="pref_guides_ids" widget="many2many_tags" readonly="1" />
                                 </group>
                             </group>
                             <group>

@@ -35,6 +35,14 @@ class CalendarEvent(models.Model):
         copy=False,
         readonly=False,
     )
+    stn_pref_guides_ids = fields.Many2many(
+        comodel_name='res.partner',
+        relation='calendar_event_anglers_prefguides_rel',
+        column1='event_id',
+        column2='guides_id',
+        copy=False,
+        readonly=False,
+    )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -68,15 +76,16 @@ class CalendarEvent(models.Model):
             guest_ids = sale_id.angler_line.mapped("guest_ids")
             resource_ids = sale_id.angler_line.mapped("resource_ids")
             guides_ids = sale_id.angler_line.mapped("guides_ids")
+            pref_guides_ids = sale_id.angler_line.mapped("pref_guides_ids")
 
             rec.stn_no_personas = len(guest_ids.ids)
             rec.stn_angler_ids = guest_ids.ids
             rec.stn_no_habitaciones = len(resource_ids.ids)
             rec.stn_no_guias = len(guides_ids.ids)
             rec.stn_guides_ids = guides_ids.ids
+            rec.stn_pref_guides_ids = pref_guides_ids.ids
 
             partner_ids = guides_ids.ids + sale_id.partner_id.ids
-            print("---- partner_ids", partner_ids)
             rec.partner_ids = partner_ids
             rec.resource_ids = resource_ids
 

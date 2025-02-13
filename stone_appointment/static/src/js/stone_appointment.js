@@ -123,10 +123,8 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
         var guides = $("#guides").val();
         var option_id = $("#option_id option:selected").val();
         var guest_ids = $("[name='guest_id[]']").toArray().map(item => parseInt(item.value));
+        var guia_ids = $("[name='guia_id[]']").toArray().map(item => parseInt(item.value));
         let commonUrlParams = new URLSearchParams(window.location.search);
-
-        console.log("---- date_start", date_start);
-
         var additional_fees = [];
         var additional_fees_ids = JSON.parse($("#additional_fees_ids").val());
         for (const fees of additional_fees_ids) {
@@ -144,10 +142,6 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
             this.onViewNotification("Please select the number of guides");
             return false;
         }
-        // if(guides == null || guides == ""){
-        //     this.onViewNotification("Please select the number of guides");
-        //     return false;
-        // }
         if (guest_ids.length === 0){
             this.onViewNotification("Please select attendees");
             return false;
@@ -160,6 +154,7 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
                 date_stop: date_stop,
                 option_id: option_id,
                 guest_ids: guest_ids,
+                guia_ids: guia_ids,
                 int_guides: guides,
                 additional_fees: additional_fees,
                 internal_note: internal_note
@@ -169,8 +164,7 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
                 return false;
             }else {
                 var url_href = '/web/reservation/extra?'+commonUrlParams.toString();
-                document.location = encodeURI(url_href);             
-                //const updateSaleOrder = await this.rpc("/web/reservation/sale/validate", {});
+                document.location = encodeURI(url_href);
             }
             return;
         }
@@ -194,6 +188,5 @@ publicWidget.registry.ReservationsAppointment = publicWidget.Widget.extend({
         document.location = encodeURI(url_href);
         return;
     },
-
 })
 

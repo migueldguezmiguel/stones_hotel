@@ -20,7 +20,9 @@
                             </group>
                             <group string="GUEST">
                                 <field name="guides" />
-                                <field name="guest_ids" widget="many2many_tags" domain="[('parent_id', '=', partner_id)]" />                                
+                                <field name="guest_ids" widget="many2many_tags" domain="[('parent_id', '=', partner_id)]" />
+                                <field name="pref_guides_ids" widget="many2many_tags" domain="[('id', 'in', pref_guides_tmp_ids)]" />
+                                <field name="pref_guides_tmp_ids" widget="many2many_tags" invisible="1" />
                             </group>
                         </group>
                         <group string="Extras">

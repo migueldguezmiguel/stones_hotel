@@ -19,12 +19,21 @@ Cambios y Actualizaciones
 =========================
 
 
+2025-02-14 (Versión: 17.0.2.10 )
+-------------------------------
+
+Desarrollo
+
+- Se agrega el campo de "Guias Preferibles", en la Reservación Interna
+
+
 2025-02-14 (Versión: 17.0.2.9 )
 -------------------------------
 
 Desarrollo
 
 - Se corrige error al generar la Reservación Interna
+
 
 2025-02-13 (Versión: 17.0.2.8 )
 -------------------------------

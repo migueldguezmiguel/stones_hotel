@@ -8,7 +8,6 @@ from dateutil import rrule
 from odoo import _, Command, fields, models
 from odoo.exceptions import UserError
 
-
 class SaleResources(models.Model):
     _name = "sale.resources"
     _description = "Sale Resource"
@@ -350,6 +349,7 @@ class SaleOrder(models.Model):
         
         guest_ids =  datas.get("guest_ids", [])
         pref_guides_ids =  datas.get("guia_ids", [])
+        print("---- pref_guides_ids", pref_guides_ids)
         start_dt =  datas.get("date_start", "") and datas["date_start"].replace(" 00:00:00", "") or ""
         end_dt =  datas.get("date_stop", "") and datas["date_stop"].replace(" 00:00:00", "") or ""
         if isinstance(start_dt, str):

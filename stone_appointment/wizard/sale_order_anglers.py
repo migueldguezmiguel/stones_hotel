@@ -3,7 +3,9 @@
 from odoo.http import request
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class SaleOrderAnglersLine(models.TransientModel):
     _name = 'sale.order.anglers.line'
@@ -85,11 +87,23 @@ class SaleOrderAnglers(models.TransientModel):
         'res_partner_order_anglers', 
         'partner_id', 
         'angler_id')
+    pref_guides_ids = fields.Many2many(
+        'res.partner', 
+        string="Preferred Guides")
+    pref_guides_tmp_ids = fields.Many2many('res.partner', compute='_compute_pref_guides_tmp_ids')
+
     additional_lines = fields.One2many(
         'sale.order.anglers.line', 
         'wizard_id', copy=False)
 
-            #=== BASE METHODS ===#
+
+    @api.depends('sale_id')
+    def _compute_pref_guides_tmp_ids(self):
+        for record in self:
+            sale_id = record.sale_id
+            record.pref_guides_tmp_ids = sale_id.appointment_id.get_guias_disponibles(sale_id.stn_date_start, sale_id.stn_date_stop)
+
+    #=== BASE METHODS ===#
     @api.model
     def default_get(self, fields):
         ctx = dict(self.env.context)
@@ -148,12 +162,13 @@ class SaleOrderAnglers(models.TransientModel):
             'recurso_id': self.recurso_id and self.recurso_id.id or False,
             'date_start': '%s'%self.date_from or False,
             'date_stop': '%s'%self.date_to or False,
-
             'option_id': self.option_id and self.option_id.id or False,
             'guest_ids': self.guest_ids and self.guest_ids.ids or False,
+            'guia_ids': self.pref_guides_ids and self.pref_guides_ids.ids or False,
             'int_guides': self.guides,
-            'additional_fees': additional_fees
+            'additional_fees': additional_fees,
         }
+        _logger.info('------ stn so DATAS %s '%(kwargs) )
         result = self.sale_id.action_create_sale_order_from_reservations(datas=kwargs)
         if result.get("error"):
             raise UserError( result["error"] )

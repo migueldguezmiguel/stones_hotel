@@ -130,8 +130,8 @@ class SaleOrderAnglers(models.TransientModel):
 
         if not self.option_id:
             raise UserError("Please select an option")
-        if not self.guides:
-            raise UserError("Please select an number of guides")
+        # if not self.guides:
+        #     raise UserError("Please select an number of guides")
         if not self.guest_ids:
             raise UserError("Please select an guest")
 
@@ -163,8 +163,5 @@ class SaleOrderAnglers(models.TransientModel):
 
         request.session["stn_sale_id"] = False
         return result
-
-
-
 
 

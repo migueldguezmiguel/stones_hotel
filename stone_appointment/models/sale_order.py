@@ -326,7 +326,7 @@ class SaleOrder(models.Model):
                 sale_id = self.create(vals_sale)
                 request.session["stn_sale_id"] = sale_id.id
             if sale_id:
-                sale_id.internal_note = request.session["stn_indx_data"].get("internal_note") or ""
+                sale_id.internal_note = request.session.get("stn_indx_data") and request.session["stn_indx_data"].get("internal_note") or ""
             return sale_id
 
         AppointmentModel = self.env["appointment.type"].sudo()
@@ -346,7 +346,7 @@ class SaleOrder(models.Model):
         additional_fees = datas.get("additional_fees")
         internal_note = ""
         if request.session.stn_indx_data:
-            internal_note = request.session["stn_indx_data"].get("internal_note") or ""
+            internal_note = request.session.get("stn_indx_data") and request.session["stn_indx_data"].get("internal_note") or ""
         
         guest_ids =  datas.get("guest_ids", [])
         pref_guides_ids =  datas.get("guia_ids", [])

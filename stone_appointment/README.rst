@@ -19,12 +19,20 @@ Cambios y Actualizaciones
 =========================
 
 
-2025-02-14 (Versión: 17.0.2.10 )
--------------------------------
+2025-02-17 (Versión: 17.0.2.11 )
+--------------------------------
 
 Desarrollo
 
-- Se agrega el campo de "Guias Preferibles", en la Reservación Interna
+- Se agrega proceso para cancelar las reservas de los reccursos y los guias cuando se cancela la cotización
+
+
+2025-02-14 (Versión: 17.0.2.10 )
+--------------------------------
+
+Desarrollo
+
+- Se agrega el campo de 'Guias Preferibles', en la Reservación Interna
 
 
 2025-02-14 (Versión: 17.0.2.9 )
@@ -44,7 +52,7 @@ Desarrollo
 
 
 2025-02-12
-----------
+-----------
 
 Desarrollo
 
@@ -52,14 +60,14 @@ Desarrollo
 - Desarrollo: Se agregan botón de "Cancelar Reserva"
 
 2025-02-11
-----------
+-----------
 
 Desarrollo
 
 - Se agrega el apartado de NOTAS en el Portal y se guarda en la cotización en el campo de "Notas Internas"
 
 2025-02-05
-----------
+-----------
 
 Desarrollo: 
 
@@ -73,17 +81,17 @@ Creditos
 ==========
 
 Autor
------
+------
 
 * Miguel Miguel <mdmiguel83@gmail.com>
 
 Contributors
-------------
+-------------
 
 * Miguel Miguel <mdmiguel83@gmail.com>
 
 Mantenimiento
--------------
+--------------
 
 Este módulo es mantenido por **Miguel Miguel**.
 

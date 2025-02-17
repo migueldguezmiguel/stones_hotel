@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
-from datetime import datetime
+from datetime import datetime, timedelta, time
 from odoo.http import request
 from dateutil import rrule
 from odoo import _, Command, fields, models
@@ -103,7 +103,6 @@ class SaleLineAngler(models.Model):
         copy=False, 
         context={'active_test': False})
 
-
     guest_ids = fields.Many2many(
         'res.partner', 
         'sale_line_angler_guest_rel',
@@ -181,7 +180,7 @@ class SaleOrder(models.Model):
         comodel_name='sale.line.angler',
         inverse_name='order_id',
         string="Angler Lines",
-        copy=True, auto_join=True)
+        copy=False, auto_join=True)
     appointment_id = fields.Many2one(
         comodel_name='appointment.type',
         string="Package Reference",
@@ -194,8 +193,8 @@ class SaleOrder(models.Model):
         comodel_name='calendar.event',
         string="Event Reference",
         required=False, ondelete='cascade', index=True, copy=False)
-    stn_date_start = fields.Date(string="Date Start")
-    stn_date_stop = fields.Date(string="Date Stop")
+    stn_date_start = fields.Date(string="Date Start", copy=False)
+    stn_date_stop = fields.Date(string="Date Stop", copy=False)
 
     def action_create_event(self):
         request.session["stn_sale_id"] = self.id
@@ -349,7 +348,6 @@ class SaleOrder(models.Model):
         
         guest_ids =  datas.get("guest_ids", [])
         pref_guides_ids =  datas.get("guia_ids", [])
-        print("---- pref_guides_ids", pref_guides_ids)
         start_dt =  datas.get("date_start", "") and datas["date_start"].replace(" 00:00:00", "") or ""
         end_dt =  datas.get("date_stop", "") and datas["date_stop"].replace(" 00:00:00", "") or ""
         if isinstance(start_dt, str):
@@ -507,9 +505,8 @@ class SaleOrder(models.Model):
                 dtstart=self.event_id.start.date(),
                 until=self.event_id.stop.date(),
                 interval=1):
-                print("---------- day_dt", day_dt)
+                print("------- day_dt", day_dt)
         return []
-
 
     # PORTAL
     def get_saleorder_portal_reservation(self):
@@ -520,6 +517,26 @@ class SaleOrder(models.Model):
             request.session["stn_sale_id"] = False
             # request.session["stn_indx_data"] = {}
         return sale_id
+
+    def action_cancel_prepare_anglers(self):
+        EventModel = self.env['calendar.event'].sudo()
+        for sale in self:
+            guest_ids = sale.angler_line.mapped("guest_ids")
+            resource_ids = sale.angler_line.mapped("resource_ids")
+            guides_ids = sale.angler_line.mapped("guides_ids")
+            event = sale.event_id
+            if sale.event_id:
+                event.with_context(mail_notify_author=True).action_cancel_meeting(guides_ids.ids)
+                event.with_context(mail_notify_author=True).action_cancel_meeting(guest_ids.ids)
+                event.show_as = 'free'
+                event.action_mass_archive('all_events')
+
+    def action_cancel(self):
+        res = super().action_cancel()
+        for sale in self:
+            sale.with_context(cancel_internal=True).action_cancel_prepare_anglers()
+        return res
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

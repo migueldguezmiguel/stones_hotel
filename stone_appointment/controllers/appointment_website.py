@@ -109,18 +109,14 @@ class AppointmentControllerWebsite(http.Controller):
             "packages": packages,
             "package_id": int(package_id or 0),
             "package_title": package_title,
-
             "recursos": recursos,
             "recurso_id": recurso_id,
             "recurso_title": recurso_title,
-
             "date_start": date_start,
             "date_stop": date_stop,
             "allday": True,
             "slots_rules": slots_rules,
-
             "internal_note": internal_note,
-
             **kwargs
         }
         return request.render(
@@ -148,7 +144,6 @@ class AppointmentControllerWebsite(http.Controller):
 
         # Guias
         guias = appointment_id.get_guias_disponibles(date_start, date_stop)
-        print("----------- guias", guias)
         habitaciones = appointment_id.get_recursos_disponibles(recurso_id, date_start, date_stop)
 
         # Opciones
@@ -180,10 +175,8 @@ class AppointmentControllerWebsite(http.Controller):
             "contactos": contactos,
             "package_id": package_id,
             "recurso_id": recurso_id,
-
             "date_start": date_start,
             "date_stop": date_stop,
-
             "option_ids": option_ids,
             "stn_sale_id": sale_id,
             "internal_note": internal_note,

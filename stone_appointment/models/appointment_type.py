@@ -65,7 +65,6 @@ class AppointmentType(models.Model):
             ], order='start asc')
             partners |= events.mapped("partner_ids")
         guias_ids = related_partners.filtered(lambda x: x.id not in partners.ids)
-
         angler_ids = AnglerLineModel.search([
             ('stn_date_stop', '>=', start_dt),
             ('stn_date_start', '<=', end_dt),

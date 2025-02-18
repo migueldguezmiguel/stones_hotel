@@ -101,7 +101,7 @@ class SaleOrderAnglers(models.TransientModel):
     def _compute_pref_guides_tmp_ids(self):
         for record in self:
             sale_id = record.sale_id
-            record.pref_guides_tmp_ids = sale_id.appointment_id.get_guias_disponibles(sale_id.stn_date_start, sale_id.stn_date_stop)
+            record.pref_guides_tmp_ids = sale_id.appointment_id.get_guias_disponibles(sale_id.stn_date_start, sale_id.stn_date_stop, sale_id.appointment_id)
 
     #=== BASE METHODS ===#
     @api.model

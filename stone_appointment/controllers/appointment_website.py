@@ -232,7 +232,7 @@ class AppointmentControllerWebsite(http.Controller):
     def web_reservation_cancel(self, **kwargs):
         SaleOrderModel = request.env['sale.order'].sudo()
         sale_id = SaleOrderModel.get_saleorder_portal_reservation()
-        if sale_id.event_id:
+        if sale_id and sale_id.event_id:
             redirect_url = '/calendar/view/%s?partner_id=%s'%( sale_id.event_id.access_token, request.env.user.partner_id.id)
             return {"redirect_url": redirect_url}
         elif sale_id:

@@ -193,8 +193,8 @@ class SaleOrder(models.Model):
         comodel_name='calendar.event',
         string="Event Reference",
         required=False, ondelete='cascade', index=True, copy=False)
-    stn_date_start = fields.Date(string="Date Start", copy=False)
-    stn_date_stop = fields.Date(string="Date Stop", copy=False)
+    stn_date_start = fields.Datetime(string="Date Start", copy=False)
+    stn_date_stop = fields.Datetime(string="Date Stop", copy=False)
 
     def action_create_event(self):
         request.session["stn_sale_id"] = self.id
@@ -255,12 +255,13 @@ class SaleOrder(models.Model):
             return total_guides
 
     def action_create_website_event(self, datas={}):
+        admin_id = self.env.ref("base.user_admin", raise_if_not_found=False)
+
         guides_ids = self.angler_line.mapped("guides_ids")
         resource_ids = self.angler_line.mapped("resource_ids")
         guest_ids = self.angler_line.mapped("guest_ids")
-        date_start = self.angler_line.mapped("stn_date_start")
-        date_end = self.angler_line.mapped("stn_date_stop")
-        admin_id = self.env.ref("base.user_admin", raise_if_not_found=False)
+        date_start = self.stn_date_start # self.angler_line.mapped("stn_date_start")
+        date_end = self.stn_date_stop  # self.angler_line.mapped("stn_date_stop")
 
         if not self.event_id:
             booking_line_values = []
@@ -280,8 +281,8 @@ class SaleOrder(models.Model):
                 "",
                 request.env.user.partner_id,
                 request.env.user,
-                date_start and date_start[0] and date_start[0].date() or "",
-                date_end and date_end[0] and date_end[0].date() or "",
+                date_start,
+                date_end,
             )
             self.event_id = self.env["calendar.event"].create(event_vals)
             self.event_id.get_sequence_name()
@@ -348,17 +349,21 @@ class SaleOrder(models.Model):
         
         guest_ids =  datas.get("guest_ids", [])
         pref_guides_ids =  datas.get("guia_ids", [])
-        start_dt =  datas.get("date_start", "") and datas["date_start"].replace(" 00:00:00", "") or ""
-        end_dt =  datas.get("date_stop", "") and datas["date_stop"].replace(" 00:00:00", "") or ""
-        if isinstance(start_dt, str):
-            start_dt = datetime.strptime(start_dt, '%Y-%m-%d')
-        if isinstance(end_dt, str):
-            end_dt = datetime.strptime(end_dt, '%Y-%m-%d')
+        start_dt =  datas.get("date_start", "") # and datas["date_start"].replace(" 00:00:00", "") or ""
+        end_dt =  datas.get("date_stop", "") # and datas["date_stop"].replace(" 00:00:00", "") or ""
+
+        start_dt = appointment_id.get_datetime_timezone_appointment_type(start_dt, appointment_id)
+        end_dt = appointment_id.get_datetime_timezone_appointment_type(end_dt, appointment_id)
+
+        start_dt = f"{start_dt}".replace("+00:00", "")
+        end_dt = f"{end_dt}".replace("+00:00", "")
+
+        print("---------- create sale - start_dt", start_dt, end_dt)
 
         product_id = get_product_id(product_tmpl_id, option_id)
 
         # Busca RECURSOS
-        habitaciones = appointment_id.get_recursos_disponibles(recurso_id, start_dt, end_dt)
+        habitaciones = appointment_id.get_recursos_disponibles(start_dt, end_dt, recurso_id)
         resource_ids = habitaciones.ids
         if len(resource_ids) == 0:
             return {"error": "No hay habitaciones disponibles"}
@@ -370,7 +375,7 @@ class SaleOrder(models.Model):
         int_guides = int(datas.get("int_guides") or "0")
         guides_ids = []
         if int_guides > 0.0:
-            guias_ids = appointment_id.get_guias_disponibles(start_dt, end_dt)
+            guias_ids = appointment_id.get_guias_disponibles(start_dt, end_dt, appointment_id)
             guides_ids = guias_ids.ids
             if len(guides_ids) == 0:
                 return {"error": "No hay guias disponibles"}

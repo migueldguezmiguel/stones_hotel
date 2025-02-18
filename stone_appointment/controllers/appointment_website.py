@@ -68,6 +68,17 @@ class AppointmentCalendarControllerCustom(AppointmentCalendarController):
 
 class AppointmentControllerWebsite(http.Controller):
 
+    def _get_default_timezone(self, appointment_type):
+        """
+            Find the default timezone from the geoip lib or fallback on the user or the visitor
+        """
+        if appointment_type.location_id:
+            return appointment_type.appointment_tz
+        cookie = request.httprequest.cookies.get('tz')
+        if cookie and cookie in dict(_tz_get(self)):
+            return cookie
+        return appointment_type.appointment_tz
+
     @route(['/web/reservation'], type='http', auth="user", website=True, csrf=False)
     def website_reservation_index(self, package_id="", recurso_id="", date_start="", date_stop="", **kwargs):
         # request.session["stn_sale_id"] = False 
@@ -138,13 +149,17 @@ class AppointmentControllerWebsite(http.Controller):
         recurso_id = SaleResourceModel.search([('id', '=', recurso_id)])
         appointment_id = AppointmentModel.search([('product_tmpl_id', '=', product_tmpl_id.id)])
 
+        if appointment_id:
+            request.session.timezone = self._get_default_timezone(appointment_id)
+
         if isinstance(date_start, str):
-            date_start = datetime.strptime(date_start, '%Y-%m-%d')
-        date_stop = date_start + relativedelta(days=6)
+            date_start = datetime.strptime("%s 15:00:00"%date_start, '%Y-%m-%d %H:%M:%S')
+            
+        date_stop = date_start + relativedelta(days=7, hours=-3)
 
         # Guias
-        guias = appointment_id.get_guias_disponibles(date_start, date_stop)
-        habitaciones = appointment_id.get_recursos_disponibles(recurso_id, date_start, date_stop)
+        guias = appointment_id.get_guias_disponibles(date_start, date_stop, appointment_id)
+        habitaciones = appointment_id.get_recursos_disponibles(date_start, date_stop, recurso_id)
 
         # Opciones
         option_ids = []

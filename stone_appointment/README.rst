@@ -19,12 +19,13 @@ Cambios y Actualizaciones
 =========================
 
 
-2025-02-17 (Versión: 17.0.2.11 )
+2025-02-17 (Versión: 17.0.2.12 )
 --------------------------------
 
 Desarrollo
 
 - Se agrega proceso para cancelar las reservas de los reccursos y los guias cuando se cancela la cotización
+- Se agrega proceso para realizar las cotizaciones y las reservas con fechas UTC y hora local
 
 
 2025-02-14 (Versión: 17.0.2.10 )

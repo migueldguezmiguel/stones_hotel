@@ -25,18 +25,21 @@ class AppointmentType(models.Model):
         comodel_name='sale.additional.fees',
         string="Additional Fees", readonly=False)
 
-    def get_recursos_disponibles(self, recurso_id, start_dt, end_dt):
+    def get_recursos_disponibles(self, start_dt, end_dt, recurso_id):
         AnglerLineModel = self.env['sale.line.angler'].sudo()
         BookingLinesModel = self.env['appointment.booking.line'].sudo()
         ResourceModel = request.env['appointment.resource'].sudo()
+
+        # datetime.combine(start_dt, time.min))
+        # datetime.combine(end_dt, time.max))
 
         related_resources = recurso_id.resource_ids
         resources = ResourceModel
         for resource in related_resources:
             events = BookingLinesModel.search([
                 ('appointment_resource_id', '=', resource.id),
-                ('event_start', '<', datetime.combine(start_dt, time.min)),
-                ('event_stop', '>', datetime.combine(end_dt, time.max)),
+                ('event_start', '<', start_dt),
+                ('event_stop', '>', end_dt),
             ])
             resources |= events.mapped("appointment_resource_id")
         habitaciones = related_resources.filtered(lambda x: x.id not in resources.ids)
@@ -48,10 +51,20 @@ class AppointmentType(models.Model):
         habitaciones = habitaciones.filtered(lambda x: x.id not in resource_ids.ids)
         return habitaciones
 
-    def get_guias_disponibles(self, start_dt, end_dt):
+    def get_datetime_timezone_appointment_type(self, date_dt, appointment_type):
+        session_tz = request.session.get('timezone', appointment_type.appointment_tz)
+        tz_info = pytz.timezone(session_tz)
+        date_dt_utc = tz_info.localize(fields.Datetime.from_string(date_dt)).astimezone(pytz.utc)
+        return date_dt_utc
+
+
+    def get_guias_disponibles(self, start_dt, end_dt, appointment_type):
         PartnerModel = self.env["res.partner"].sudo()
         EventModel = self.env['calendar.event'].sudo()
         AnglerLineModel = self.env['sale.line.angler'].sudo()
+
+        start_dt_utc = self.get_datetime_timezone_appointment_type(start_dt, appointment_type)
+        end_dt_utc = self.get_datetime_timezone_appointment_type(end_dt, appointment_type)
 
         related_partners = self.staff_user_ids.mapped("partner_id")
         partners = PartnerModel
@@ -60,14 +73,14 @@ class AppointmentType(models.Model):
                 ('partner_ids', 'in', partner.ids),
                 '&', '&',
                 ('show_as', '=', 'busy'),
-                ('stop', '>=', datetime.combine(start_dt, time.min)),
-                ('start', '<=', datetime.combine(end_dt, time.max)),
+                ('stop', '>=', start_dt_utc),
+                ('start', '<=', end_dt_utc),
             ], order='start asc')
             partners |= events.mapped("partner_ids")
         guias_ids = related_partners.filtered(lambda x: x.id not in partners.ids)
         angler_ids = AnglerLineModel.search([
-            ('stn_date_stop', '>=', start_dt),
-            ('stn_date_start', '<=', end_dt),
+            ('stn_date_stop', '>=', start_dt_utc),
+            ('stn_date_start', '<=', end_dt_utc),
         ]).mapped("guides_ids")
         guias_ids = guias_ids.filtered(lambda x: x.id not in angler_ids.ids)
         return guias_ids
@@ -80,6 +93,7 @@ class AppointmentType(models.Model):
         slot_datys = [int(slot.weekday)  for slot in self.slot_ids]
         first_day = requested_tz.fromutc(reference_date + relativedelta(hours=self.min_schedule_hours))
         last_day = requested_tz.fromutc(reference_date + relativedelta(days=appointment_duration_days))
+
         slots = self._slots_generate(
             first_day.astimezone(pytz.utc),
             last_day.astimezone(pytz.utc),

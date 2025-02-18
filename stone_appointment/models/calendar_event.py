@@ -106,7 +106,6 @@ class CalendarEvent(models.Model):
     def action_cancel_meeting(self, partner_ids):
         self.ensure_one()
         cancel_internal = self.env.context.get('cancel_internal') or False
-        print("-------- cancel_internal", cancel_internal)
         super().action_cancel_meeting(partner_ids)
         if cancel_internal == False and self.active == False:
             self.sale_id.action_cancel()

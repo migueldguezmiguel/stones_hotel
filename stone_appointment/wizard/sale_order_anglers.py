@@ -35,9 +35,9 @@ class SaleOrderAnglers(models.TransientModel):
         ('create', 'Create'),
         ('edit', 'Edita'),
     ], string="Estado")
-    date_from = fields.Date(
+    date_from = fields.Datetime(
         string="Start Date", index=True)
-    date_to = fields.Date(
+    date_to = fields.Datetime(
         string="Stop Date", index=True)
     appointment_id = fields.Many2one(
         comodel_name='appointment.type',
@@ -157,11 +157,17 @@ class SaleOrderAnglers(models.TransientModel):
                 "additional_fees_id": line.additional_id and line.additional_id.id or False,
                 "extra": line.extra or 0
             })
+
+        date_start = self.sale_id.stn_date_start
+        date_stop = self.sale_id.stn_date_stop
+        appointment_id = self.sale_id.appointment_id
+        dat_start_utc = appointment_id.get_localtime_timezone_appointment_type(date_start)
+        dat_stop_utc = appointment_id.get_localtime_timezone_appointment_type(date_stop)
         kwargs = {
             'package_id': self.template_id and self.template_id.id or False,
             'recurso_id': self.recurso_id and self.recurso_id.id or False,
-            'date_start': '%s'%self.date_from or False,
-            'date_stop': '%s'%self.date_to or False,
+            'date_start': dat_start_utc,
+            'date_stop': dat_stop_utc,
             'option_id': self.option_id and self.option_id.id or False,
             'guest_ids': self.guest_ids and self.guest_ids.ids or False,
             'guia_ids': self.pref_guides_ids and self.pref_guides_ids.ids or False,
@@ -180,3 +186,21 @@ class SaleOrderAnglers(models.TransientModel):
         return result
 
 
+    def action_update_date_reservation(self):
+        BookingLine = self.env['appointment.booking.line']
+        for rec in self:
+            rec.event_id.update({
+                "start": rec.stn_date_start,
+                "stop": rec.stn_date_stop,
+            })
+            events = BookingLine.search([('calendar_event_id', '=', rec.event_id.id)])
+            for event in events:
+                event.update({
+                    "event_start": rec.stn_date_start,
+                    "event_stop": rec.stn_date_stop,
+                })
+            for line in rec.angler_line:
+                line.update({
+                    "stn_date_start": rec.stn_date_start,
+                    "stn_date_stop": rec.stn_date_stop,
+                })

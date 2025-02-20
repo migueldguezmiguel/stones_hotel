@@ -25,62 +25,58 @@ class AppointmentType(models.Model):
         comodel_name='sale.additional.fees',
         string="Additional Fees", readonly=False)
 
-    def get_recursos_disponibles(self, start_dt, end_dt, recurso_id):
-        AnglerLineModel = self.env['sale.line.angler'].sudo()
-        BookingLinesModel = self.env['appointment.booking.line'].sudo()
-        ResourceModel = request.env['appointment.resource'].sudo()
-
-        # datetime.combine(start_dt, time.min))
-        # datetime.combine(end_dt, time.max))
-
-        related_resources = recurso_id.resource_ids
-        resources = ResourceModel
-        for resource in related_resources:
-            events = BookingLinesModel.search([
-                ('appointment_resource_id', '=', resource.id),
-                ('event_start', '<', start_dt),
-                ('event_stop', '>', end_dt),
-            ])
-            resources |= events.mapped("appointment_resource_id")
-        habitaciones = related_resources.filtered(lambda x: x.id not in resources.ids)
-
-        resource_ids = AnglerLineModel.search([
-            ('stn_date_stop', '>=', start_dt),
-            ('stn_date_start', '<=', end_dt),
-        ]).mapped("resource_ids")
-        habitaciones = habitaciones.filtered(lambda x: x.id not in resource_ids.ids)
-        return habitaciones
-
     def get_datetime_timezone_appointment_type(self, date_dt, appointment_type):
         session_tz = request.session.get('timezone', appointment_type.appointment_tz)
         tz_info = pytz.timezone(session_tz)
         date_dt_utc = tz_info.localize(fields.Datetime.from_string(date_dt)).astimezone(pytz.utc)
         return date_dt_utc
 
+    def get_localtime_timezone_appointment_type(self, date_dt):
+        appt_tz = pytz.timezone(self.appointment_tz)
+        ref_tz_apt_type = date_dt.astimezone(appt_tz)
+        return ref_tz_apt_type.strftime("%Y-%m-%d %H:%M:%S")
+
+    def get_recursos_disponibles(self, start_dt, end_dt, recurso_id):
+        AnglerLineModel = self.env['sale.line.angler'].sudo()
+        BookingLinesModel = self.env['appointment.booking.line'].sudo()
+        ResourceModel = request.env['appointment.resource'].sudo()
+        related_resources = recurso_id.resource_ids
+        events = BookingLinesModel.search([
+            ('appointment_resource_id', 'in', related_resources.ids),
+            ('event_start', '>=', start_dt),
+            ('event_stop', '<=', end_dt),
+        ])
+        resources = events.mapped("appointment_resource_id")
+        habitaciones = related_resources.filtered(lambda x: x.id not in resources.ids)
+        resource_ids = AnglerLineModel.search([
+            ('stn_date_start', '>=', start_dt),
+            ('stn_date_stop', '<=', end_dt),
+        ]).mapped("resource_ids")
+        habitaciones = habitaciones.filtered(lambda x: x.id not in resource_ids.ids)
+        return habitaciones
 
     def get_guias_disponibles(self, start_dt, end_dt, appointment_type):
         PartnerModel = self.env["res.partner"].sudo()
         EventModel = self.env['calendar.event'].sudo()
         AnglerLineModel = self.env['sale.line.angler'].sudo()
 
-        start_dt_utc = self.get_datetime_timezone_appointment_type(start_dt, appointment_type)
-        end_dt_utc = self.get_datetime_timezone_appointment_type(end_dt, appointment_type)
-
-        related_partners = self.staff_user_ids.mapped("partner_id")
         partners = PartnerModel
-        for partner in related_partners:
-            events = EventModel.search(['&',
-                ('partner_ids', 'in', partner.ids),
-                '&', '&',
-                ('show_as', '=', 'busy'),
-                ('stop', '>=', start_dt_utc),
-                ('start', '<=', end_dt_utc),
-            ], order='start asc')
-            partners |= events.mapped("partner_ids")
+        related_partners = self.staff_user_ids.mapped("partner_id")
+        all_events = self.env['calendar.event'].search(
+            ['&',
+             ('partner_ids', 'in', related_partners.ids),
+             '&', '&',
+             ('show_as', '=', 'busy'),
+             ('stop', '>=', start_dt),
+             ('start', '<=', end_dt),
+            ],
+            order='start asc',
+        )
+        partners |= all_events.mapped("partner_ids")
         guias_ids = related_partners.filtered(lambda x: x.id not in partners.ids)
         angler_ids = AnglerLineModel.search([
-            ('stn_date_stop', '>=', start_dt_utc),
-            ('stn_date_start', '<=', end_dt_utc),
+            ('stn_date_start', '>=', start_dt),
+            ('stn_date_stop', '<=', end_dt),
         ]).mapped("guides_ids")
         guias_ids = guias_ids.filtered(lambda x: x.id not in angler_ids.ids)
         return guias_ids
@@ -152,286 +148,3 @@ class AppointmentType(models.Model):
             slot_datas.append(slot_tmp)
         return slot_datas
 
-"""
-[
-    {
-        "id": 0,
-        "month": "February 2025",
-        "weeks": [
-            datetime.date(2025, 1, 27),
-            datetime.date(2025, 2, 1),
-            datetime.date(2025, 2, 3),
-            datetime.date(2025, 2, 8),
-            datetime.date(2025, 2, 10),
-            datetime.date(2025, 2, 15),
-            datetime.date(2025, 2, 17),
-            datetime.date(2025, 2, 22),
-            datetime.date(2025, 2, 24),
-            datetime.date(2025, 3, 1),
-        ],
-    },
-    {
-        "id": 1,
-        "month": "March 2025",
-        "weeks": [
-            datetime.date(2025, 2, 24),
-            datetime.date(2025, 3, 1),
-            datetime.date(2025, 3, 3),
-            datetime.date(2025, 3, 8),
-            datetime.date(2025, 3, 10),
-            datetime.date(2025, 3, 15),
-            datetime.date(2025, 3, 17),
-            datetime.date(2025, 3, 22),
-            datetime.date(2025, 3, 24),
-            datetime.date(2025, 3, 29),
-            datetime.date(2025, 3, 31),
-            datetime.date(2025, 4, 5),
-        ],
-    },
-    {
-        "id": 2,
-        "month": "April 2025",
-        "weeks": [
-            datetime.date(2025, 3, 31),
-            datetime.date(2025, 4, 5),
-            datetime.date(2025, 4, 7),
-            datetime.date(2025, 4, 12),
-            datetime.date(2025, 4, 14),
-            datetime.date(2025, 4, 19),
-            datetime.date(2025, 4, 21),
-            datetime.date(2025, 4, 26),
-            datetime.date(2025, 4, 28),
-            datetime.date(2025, 5, 3),
-        ],
-    },
-    {
-        "id": 3,
-        "month": "May 2025",
-        "weeks": [
-            datetime.date(2025, 4, 28),
-            datetime.date(2025, 5, 3),
-            datetime.date(2025, 5, 5),
-            datetime.date(2025, 5, 10),
-            datetime.date(2025, 5, 12),
-            datetime.date(2025, 5, 17),
-            datetime.date(2025, 5, 19),
-            datetime.date(2025, 5, 24),
-            datetime.date(2025, 5, 26),
-            datetime.date(2025, 5, 31),
-        ],
-    },
-    {
-        "id": 4,
-        "month": "June 2025",
-        "weeks": [
-            datetime.date(2025, 6, 2),
-            datetime.date(2025, 6, 7),
-            datetime.date(2025, 6, 9),
-            datetime.date(2025, 6, 14),
-            datetime.date(2025, 6, 16),
-            datetime.date(2025, 6, 21),
-            datetime.date(2025, 6, 23),
-            datetime.date(2025, 6, 28),
-            datetime.date(2025, 6, 30),
-            datetime.date(2025, 7, 5),
-        ],
-    },
-    {
-        "id": 5,
-        "month": "July 2025",
-        "weeks": [
-            datetime.date(2025, 6, 30),
-            datetime.date(2025, 7, 5),
-            datetime.date(2025, 7, 7),
-            datetime.date(2025, 7, 12),
-            datetime.date(2025, 7, 14),
-            datetime.date(2025, 7, 19),
-            datetime.date(2025, 7, 21),
-            datetime.date(2025, 7, 26),
-            datetime.date(2025, 7, 28),
-            datetime.date(2025, 8, 2),
-        ],
-    },
-    {
-        "id": 6,
-        "month": "August 2025",
-        "weeks": [
-            datetime.date(2025, 7, 28),
-            datetime.date(2025, 8, 2),
-            datetime.date(2025, 8, 4),
-            datetime.date(2025, 8, 9),
-            datetime.date(2025, 8, 11),
-            datetime.date(2025, 8, 16),
-            datetime.date(2025, 8, 18),
-            datetime.date(2025, 8, 23),
-            datetime.date(2025, 8, 25),
-            datetime.date(2025, 8, 30),
-            datetime.date(2025, 9, 1),
-            datetime.date(2025, 9, 6),
-        ],
-    },
-    {
-        "id": 7,
-        "month": "September 2025",
-        "weeks": [
-            datetime.date(2025, 9, 1),
-            datetime.date(2025, 9, 6),
-            datetime.date(2025, 9, 8),
-            datetime.date(2025, 9, 13),
-            datetime.date(2025, 9, 15),
-            datetime.date(2025, 9, 20),
-            datetime.date(2025, 9, 22),
-            datetime.date(2025, 9, 27),
-            datetime.date(2025, 9, 29),
-            datetime.date(2025, 10, 4),
-        ],
-    },
-    {
-        "id": 8,
-        "month": "October 2025",
-        "weeks": [
-            datetime.date(2025, 9, 29),
-            datetime.date(2025, 10, 4),
-            datetime.date(2025, 10, 6),
-            datetime.date(2025, 10, 11),
-            datetime.date(2025, 10, 13),
-            datetime.date(2025, 10, 18),
-            datetime.date(2025, 10, 20),
-            datetime.date(2025, 10, 25),
-            datetime.date(2025, 10, 27),
-            datetime.date(2025, 11, 1),
-        ],
-    },
-    {
-        "id": 9,
-        "month": "November 2025",
-        "weeks": [
-            datetime.date(2025, 10, 27),
-            datetime.date(2025, 11, 1),
-            datetime.date(2025, 11, 3),
-            datetime.date(2025, 11, 8),
-            datetime.date(2025, 11, 10),
-            datetime.date(2025, 11, 15),
-            datetime.date(2025, 11, 17),
-            datetime.date(2025, 11, 22),
-            datetime.date(2025, 11, 24),
-            datetime.date(2025, 11, 29),
-            datetime.date(2025, 12, 1),
-            datetime.date(2025, 12, 6),
-        ],
-    },
-    {
-        "id": 10,
-        "month": "December 2025",
-        "weeks": [
-            datetime.date(2025, 12, 1),
-            datetime.date(2025, 12, 6),
-            datetime.date(2025, 12, 8),
-            datetime.date(2025, 12, 13),
-            datetime.date(2025, 12, 15),
-            datetime.date(2025, 12, 20),
-            datetime.date(2025, 12, 22),
-            datetime.date(2025, 12, 27),
-            datetime.date(2025, 12, 29),
-            datetime.date(2026, 1, 3),
-        ],
-    },
-    {
-        "id": 11,
-        "month": "January 2026",
-        "weeks": [
-            datetime.date(2025, 12, 29),
-            datetime.date(2026, 1, 3),
-            datetime.date(2026, 1, 5),
-            datetime.date(2026, 1, 10),
-            datetime.date(2026, 1, 12),
-            datetime.date(2026, 1, 17),
-            datetime.date(2026, 1, 19),
-            datetime.date(2026, 1, 24),
-            datetime.date(2026, 1, 26),
-            datetime.date(2026, 1, 31),
-        ],
-    },
-    {
-        "id": 12,
-        "month": "February 2026",
-        "weeks": [
-            datetime.date(2026, 2, 2),
-            datetime.date(2026, 2, 7),
-            datetime.date(2026, 2, 9),
-            datetime.date(2026, 2, 14),
-            datetime.date(2026, 2, 16),
-            datetime.date(2026, 2, 21),
-            datetime.date(2026, 2, 23),
-            datetime.date(2026, 2, 28),
-        ],
-    },
-    {
-        "id": 13,
-        "month": "March 2026",
-        "weeks": [
-            datetime.date(2026, 3, 2),
-            datetime.date(2026, 3, 7),
-            datetime.date(2026, 3, 9),
-            datetime.date(2026, 3, 14),
-            datetime.date(2026, 3, 16),
-            datetime.date(2026, 3, 21),
-            datetime.date(2026, 3, 23),
-            datetime.date(2026, 3, 28),
-            datetime.date(2026, 3, 30),
-            datetime.date(2026, 4, 4),
-        ],
-    },
-    {
-        "id": 14,
-        "month": "April 2026",
-        "weeks": [
-            datetime.date(2026, 3, 30),
-            datetime.date(2026, 4, 4),
-            datetime.date(2026, 4, 6),
-            datetime.date(2026, 4, 11),
-            datetime.date(2026, 4, 13),
-            datetime.date(2026, 4, 18),
-            datetime.date(2026, 4, 20),
-            datetime.date(2026, 4, 25),
-            datetime.date(2026, 4, 27),
-            datetime.date(2026, 5, 2),
-        ],
-    },
-    {
-        "id": 15,
-        "month": "May 2026",
-        "weeks": [
-            datetime.date(2026, 4, 27),
-            datetime.date(2026, 5, 2),
-            datetime.date(2026, 5, 4),
-            datetime.date(2026, 5, 9),
-            datetime.date(2026, 5, 11),
-            datetime.date(2026, 5, 16),
-            datetime.date(2026, 5, 18),
-            datetime.date(2026, 5, 23),
-            datetime.date(2026, 5, 25),
-            datetime.date(2026, 5, 30),
-            datetime.date(2026, 6, 1),
-            datetime.date(2026, 6, 6),
-        ],
-    },
-    {
-        "id": 16,
-        "month": "June 2026",
-        "weeks": [
-            datetime.date(2026, 6, 1),
-            datetime.date(2026, 6, 6),
-            datetime.date(2026, 6, 8),
-            datetime.date(2026, 6, 13),
-            datetime.date(2026, 6, 15),
-            datetime.date(2026, 6, 20),
-            datetime.date(2026, 6, 22),
-            datetime.date(2026, 6, 27),
-            datetime.date(2026, 6, 29),
-            datetime.date(2026, 7, 4),
-        ],
-    },
-]
-
-"""

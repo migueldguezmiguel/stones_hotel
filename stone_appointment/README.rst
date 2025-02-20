@@ -19,6 +19,12 @@ Cambios y Actualizaciones
 =========================
 
 
+2025-02-20 (Versión: 17.0.2.13 )
+--------------------------------
+
+- Desarrollo: Se corrige proceso de fechas locales y fechas UTC, al crear las lineas de los "Anglers"
+
+
 2025-02-17 (Versión: 17.0.2.12 )
 --------------------------------
 

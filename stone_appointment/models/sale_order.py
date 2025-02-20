@@ -351,14 +351,11 @@ class SaleOrder(models.Model):
         pref_guides_ids =  datas.get("guia_ids", [])
         start_dt =  datas.get("date_start", "") # and datas["date_start"].replace(" 00:00:00", "") or ""
         end_dt =  datas.get("date_stop", "") # and datas["date_stop"].replace(" 00:00:00", "") or ""
-
         start_dt = appointment_id.get_datetime_timezone_appointment_type(start_dt, appointment_id)
         end_dt = appointment_id.get_datetime_timezone_appointment_type(end_dt, appointment_id)
 
         start_dt = f"{start_dt}".replace("+00:00", "")
         end_dt = f"{end_dt}".replace("+00:00", "")
-
-        print("---------- create sale - start_dt", start_dt, end_dt)
 
         product_id = get_product_id(product_tmpl_id, option_id)
 

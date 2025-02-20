@@ -158,8 +158,11 @@ class AppointmentControllerWebsite(http.Controller):
         date_stop = date_start + relativedelta(days=7, hours=-3)
 
         # Guias
-        guias = appointment_id.get_guias_disponibles(date_start, date_stop, appointment_id)
-        habitaciones = appointment_id.get_recursos_disponibles(date_start, date_stop, recurso_id)
+        date_start_utc = appointment_id.get_datetime_timezone_appointment_type(date_start, appointment_id)
+        date_stop_utc = appointment_id.get_datetime_timezone_appointment_type(date_stop, appointment_id)
+
+        guias = appointment_id.get_guias_disponibles(date_start_utc, date_stop_utc, appointment_id)
+        habitaciones = appointment_id.get_recursos_disponibles(date_start_utc, date_stop_utc, recurso_id)
 
         # Opciones
         option_ids = []

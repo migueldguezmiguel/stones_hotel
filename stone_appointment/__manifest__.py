@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Custom Appointment',
-    'version': '17.0.2.12',
+    'version': '17.0.2.13',
     'summary': """ Custom Appointment Summary """,
     'author': 'Miguel Miguel',
     'website': 'https://miguel.odoo.com',

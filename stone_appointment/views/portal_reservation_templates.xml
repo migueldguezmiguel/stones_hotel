@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Portal -->
+
+    <template id="portal_my_home_menu_reservation" name="Portal layout : reservation menu entries" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'reservation' or event" t-attf-class="breadcrumb-item #{'active ' if not event else ''}">
+                <a t-if="event" t-attf-href="/my/reservations?{{ keep_query() }}">Reservations</a>
+                <t t-else="">Reservations</t>
+            </li>
+            <li t-if="event" class="breadcrumb-item active">
+                <span t-field="event.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_reservation" name="Show Reservation" inherit_id="portal.portal_my_home" customize_show="True" priority="10">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+            <t t-set="portal_client_category_enable" t-value="True"/>
+        </xpath>
+        <div id="portal_client_category" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/appointment/static/src/img/calendar.svg'"/>
+                <t t-set="text">Follow, reschedule or cancel your reservation</t>
+                <t t-set="title">Reservations</t>
+                <t t-set="url" t-value="'/my/reservations'"/>
+                <t t-set="placeholder_count" t-value="'reservation_count'"/>
+            </t>
+        </div>
+    </template>
+
+
+    <template id="portal_my_reservation" name="My Reservation">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Reservation</t>
+            </t>
+            <t t-if="not reservations">
+                <div class="alert alert-warning" role="alert">
+                    <p class="mb-0">There is no reservation linked to your account.</p>
+                </div>
+            </t>
+            <t t-else="" t-call="portal.portal_table">
+                <t t-set="reservations" t-value="grouped_reservations or reservations"/>
+                <thead>
+                    <tr>
+                        <th>Quotation #</th>
+                        <th class="text-center">Arrival Date</th>
+                        <th class="text-end">Total</th>
+                        <th class="text-center">Field</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="reservations" t-as="appts">
+                        <tbody t-if="grouped_reservations and not groupby == 'none'">
+                            <t t-set="groupby_record" t-value="appts[0]"/>
+                            <t t-set="appts" t-value="appts[1]"/>
+                            <tr class="table-light">
+                                <th colspan="4">
+                                    <em class="fw-normal text-muted">Reservations by <t t-out="searchbar_groupby[groupby]['label']"/>:</em>
+                                    <span t-field="groupby_record.name"/>
+                                </th>
+                                <th class="text-end">
+                                    Total: <span class="text-muted" t-out="len(appts)"/>
+                                </th>
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <t t-foreach="appts" t-as="reservation">
+                                <t t-set="sale_id" t-value="reservation.sale_id" />
+                                <tr>
+                                    <td>
+                                        <a t-att-href="sale_id.get_portal_url()" t-att-title="sale_id.name">
+                                            <t t-out="sale_id.name" t-if="sale_id.name != '/'"/>
+                                            <em t-else="">Quotation</em>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a t-attf-href="/calendar/view/#{reservation.access_token}?partner_id=#{request.env.user.partner_id.id}">
+                                            <span t-out="reservation.start" /> 
+                                        </a>
+                                    </td>
+                                    <td class="text-end">
+                                        <span> <t t-out="sale_id.amount_total" t-options='{"widget": "monetary", "display_currency": sale_id.currency_id}'/></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-out="sale_id.recurso_id.name"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <span t-if="sale_id.state == 'cancel'" class="badge rounded-pill text-bg-danger">
+                                            <i class="fa fa-fw fa-remove"/> Cancelled</span>
+                                        <span t-if="sale_id.state == 'draft'" class="badge rounded-pill text-bg-info">
+                                            <i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"/> Draft</span>
+                                        <span t-if="sale_id.state == 'sale'" class="badge rounded-pill text-bg-success">
+                                            <i class="fa fa-fw fa-check" aria-label="Opened" title="Opened" role="img"/> Quotation</span>
+                                        <span t-if="sale_id.is_expired" class="badge rounded-pill text-bg-danger">
+                                            <i class="fa fa-fw fa-clock-o"/> Expired</span>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+
+</odoo>

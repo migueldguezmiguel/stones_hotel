@@ -13,6 +13,14 @@ class CalendarEvent(models.Model):
         comodel_name='sale.order',
         string="Order Reference",
         required=False, ondelete='cascade', index=True, copy=False)
+    sale_state = fields.Selection(
+        related='sale_id.state',
+        string="Order Status",
+        copy=False, store=True, precompute=True)
+    recurso_id = fields.Many2one(
+        related='sale_id.recurso_id',
+        store=True, index=True, precompute=True)
+
     folio = fields.Char(string="Folio", default="/")
     stn_no_personas = fields.Integer("Numero de Personas")
     stn_no_habitaciones = fields.Integer("Numero de Habitaciones")

@@ -172,6 +172,16 @@ class SaleLineAngler(models.Model):
             },
         }
 
+
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    def get_guest_ids_date_start(self):
+        self.ensure_one()
+        stn_date_start = self.mapped("line_ids").mapped("sale_line_ids").mapped("order_id").mapped("stn_date_start")
+        print("----------stn_date_start", self, stn_date_start)
+        return stn_date_start and stn_date_start[0] or ""
+
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 

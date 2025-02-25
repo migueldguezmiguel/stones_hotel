@@ -81,7 +81,7 @@
                         <div class="d-flex py-1 px-0 bg-transparent o-cc1-text border-0" t-if="event.stn_no_guias > 0.0">
                             <i class="fa fa-users fa-fw me-2 mt-1 text-muted"/>
                             <span t-if="event.stn_no_guias">Number of Guides: <t t-out="event.stn_no_guias"/> </span>
-                            <span t-out="event.appointment_booker_id.name" />
+                            <span t-out="event.stn_no_guias" />
                         </div>
                     </div>
                 </div>

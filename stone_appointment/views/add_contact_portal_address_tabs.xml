@@ -36,19 +36,18 @@
             <xpath expr="//form" position="after">
                 <div class="mb-5">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
-                      <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" role="tab" aria-controls="other" aria-selected="false">Other</button>
-                      </li>
-                      <li class="nav-item" role="presentation" style="display:none">
-                        <button class="nav-link active" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" role="tab" aria-controls="contact" aria-selected="true">Contact</button>
-                      </li>
-                      <li class="nav-item" role="presentation" style="display:none">
-                        <button class="nav-link" id="invoice-tab" data-bs-toggle="tab" data-bs-target="#invoice" role="tab" aria-controls="invoice" aria-selected="false">Invoice</button>
-                      </li>
-                      <li class="nav-item" role="presentation" style="display:none">
-                        <button class="nav-link" id="delivery-tab" data-bs-toggle="tab" data-bs-target="#delivery" role="tab" aria-controls="delivery" aria-selected="false">Delivery</button>
-                      </li>
-
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="other-tab" data-bs-toggle="tab" data-bs-target="#other" role="tab" aria-controls="other" aria-selected="false">Other</button>
+                        </li>
+                        <li class="nav-item" role="presentation" style="display:none">
+                            <button class="nav-link active" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" role="tab" aria-controls="contact" aria-selected="true">Contact</button>
+                        </li>
+                        <li class="nav-item" role="presentation" style="display:none">
+                            <button class="nav-link" id="invoice-tab" data-bs-toggle="tab" data-bs-target="#invoice" role="tab" aria-controls="invoice" aria-selected="false">Invoice</button>
+                        </li>
+                        <li class="nav-item" role="presentation" style="display:none">
+                            <button class="nav-link" id="delivery-tab" data-bs-toggle="tab" data-bs-target="#delivery" role="tab" aria-controls="delivery" aria-selected="false">Delivery</button>
+                        </li>
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <t t-foreach="['other', 'contact', 'invoice', 'delivery']" t-as="type">

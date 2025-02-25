@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_invoices_inherit" inherit_id="account.portal_my_invoices" name="Custom Invoice Portal">
+        <!-- Agregar el campo Vendedor en el cuerpo de la tabla -->
+        <xpath expr="//th[@name='invoice_number']" position="after">
+            <th name="datestart">Start Date</th>
+        </xpath>
+        <xpath expr="//td[position()=1]" position="after">
+            <t t-set="date_start" t-value=" invoice.get_guest_ids_date_start() " />
+            <td t-if="date_start" t-esc="date_start.date()"/>
+            <td t-else="">-</td>
+        </xpath>
+
+        <!-- Reemplazar la barra de búsqueda con portal_searchbar -->
+        <xpath expr="//t[@t-call='portal.portal_searchbar']" position="replace">
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Invoices</t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

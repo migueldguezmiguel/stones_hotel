@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Custom Appointment',
-    'version': '17.0.2.13',
+    'version': '17.0.2.15',
     'summary': """ Custom Appointment Summary """,
     'author': 'Miguel Miguel',
     'website': 'https://miguel.odoo.com',
@@ -10,6 +10,7 @@
         'base', 
         'calendar',
         'portal',
+        'account',
         'sale',
         'appointment', 
         'website_appointment',
@@ -34,6 +35,9 @@
         'views/add_contact_portal_address_tabs.xml',
         'views/hotel_appointment_portal_templates.xml',
         'views/hotel_appointment_website_templates.xml',
+
+        'views/portal_reservation_templates.xml',
+        'views/portal_invoice_templates.xml',
 
         'wizard/sale_order_anglers_views.xml',
 

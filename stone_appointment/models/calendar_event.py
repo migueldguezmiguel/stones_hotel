@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pytz
 from datetime import datetime, timedelta, time
 from dateutil import rrule
 from odoo import _, api, fields, models
@@ -118,3 +119,8 @@ class CalendarEvent(models.Model):
         if cancel_internal == False and self.active == False:
             self.sale_id.action_cancel()
 
+    def get_date_start_tz(self):
+        timezone = self._context.get('tz') or self.env.user.partner_id.tz or 'UTC'
+        self = self.with_context(tz=timezone)        
+        tz = pytz.timezone(timezone)
+        return pytz.utc.localize(self.start).astimezone(tz).date()

@@ -79,7 +79,7 @@
                                     </td>
                                     <td class="text-center">
                                         <a t-attf-href="/calendar/view/#{reservation.access_token}?partner_id=#{request.env.user.partner_id.id}">
-                                            <span t-out="reservation.start" /> 
+                                            <span t-out="reservation.get_date_start_tz()" /> 
                                         </a>
                                     </td>
                                     <td class="text-end">

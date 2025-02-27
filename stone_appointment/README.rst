@@ -19,6 +19,16 @@ Cambios y Actualizaciones
 =========================
 
 
+2025-02-26 (Versión: 17.0.2.16 )
+--------------------------------
+
+- Desarrollo: Se realiza modificaciones a la pantalla del portal "Mi Cuenta", se agrega seccion de busqueda de contactos y la posibilidad de modificar contactos
+- Se agrego formato a la pantalla de los contactos (CARD-Body)
+- Se agrego formato a la pantalla para editar contactos
+- Se agrego formato de zona horaria en la vista de la lista de las facturas en el portal
+- Se agrego formato de zona horaria en la vista de la lista de las reservaciones en el portal
+
+
 2025-02-25 (Versión: 17.0.2.15 )
 --------------------------------
 

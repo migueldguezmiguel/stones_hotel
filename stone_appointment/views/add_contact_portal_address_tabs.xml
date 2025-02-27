@@ -3,25 +3,53 @@
 <odoo>
     <data>
         <template id="contact_child_card">
-            <div class="row"><div class="col-12 mt-3">
-                <span><a t-attf-href="/my/#{partner.name}/contact/add?type=#{type}" class="btn btn-primary pull-left mb32">ADD</a></span>
-            </div></div>
-            <t t-if="partner.mapped('child_ids').filtered(lambda x: x.type == type)">
+            <div class="row">
+                <div class="col-6 mt-3">
+                    <span><a t-attf-href="/my/#{partner.name}/contact/add?type=#{type}" class="btn btn-primary pull-left mb32">ADD</a></span>
+                </div>
+                <div class="col-6 mt-3">
+                    <t t-esc="search" />
+                    <!-- Campo de búsqueda con input-group -->
+                    <form method="get" action="/my/account">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search by name..." t-att-value="search"/>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-outline-secondary">
+                                    <i class="fa fa-search"></i> <!-- Ícono de búsqueda -->
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <t t-if="partner_children">
                 <div class="row row-cols-3">
                     <t t-foreach="partner_children" t-as="child_partner">
                         <div class="col-4 mb-3">
                             <div class="card h-100 border-secondary">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <span><t t-esc="child_partner.name"/></span>
+                                    <div>
+                                        <a t-att-href="'/my/contacts/edit/%s' % child_partner.id" class="btn btn-sm btn-primary">Edit</a>
+                                        <!-- <a t-att-href="'/my/contacts/delete/%s' % child_partner.id" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this contact?');">Delete</a> -->
+                                    </div>
+                                </div>
                                 <div class="card-body pl-3 w-33">
                                     <div class="row">
                                         <div class="col-12" id="card_body">
-                                            <div class="card-title font-weight-bold" style="font-size: 14px">
-                                                <span t-field="child_partner.name"/><span>, </span>
-                                                <span t-field="child_partner.parent_id.name"/>
+                                            <t t-set="address_parts" t-value="[
+                                              child_partner.street or '',
+                                              child_partner.city or '',
+                                              child_partner.zip or '',
+                                              child_partner.state_id.name if child_partner.state_id else '',
+                                              child_partner.country_id.name if child_partner.country_id else ''
+                                            ]"/>
+                                            <div t-if="address_parts" class="card-title font-weight-bold" style="font-size: 14px">
+                                                <t t-esc="', '.join([part for part in address_parts if part]).strip(', ') or 'N/A'"/>
                                             </div>
-                                            <div class="card-text" style="font-size: 13px;"><span t-field="child_partner.city"/></div>
-                                            <div class="card-text" style="font-size: 13px"><span t-field="child_partner.country_id.name"/></div>
-                                            <div class="card-text" style="font-size: 13px"><div t-field="child_partner.email"/></div>
-                                            <div class="card-text" style="font-size: 13px"><span t-field="child_partner.phone"/></div>
+                                            <span t-if="child_partner.email" style="font-size: 14px"><strong>Email:</strong> <t t-esc="child_partner.email or 'N/A'"/></span><br />
+                                            <span t-if="child_partner.mobile" style="font-size: 14px"><strong>Mobile:</strong> <t t-esc="child_partner.mobile or 'N/A'"/></span><br />
+                                            <span t-if="child_partner.phone" style="font-size: 14px"><strong>Phone:</strong> <t t-esc="child_partner.phone or 'N/A'"/></span>
                                         </div>
                                     </div>
                                 </div>
@@ -51,11 +79,13 @@
                     </ul>
                     <div class="tab-content" id="myTabContent">
                         <t t-foreach="['other', 'contact', 'invoice', 'delivery']" t-as="type">
-                            <div t-att-class="'tab-pane fade %s' % ('show active' if type=='other' else '')" t-att-id="type" role="tabpanel" t-attf-aria-labelledby="{{type}}-tab"><div>
-                                <t t-call="stone_appointment.contact_child_card">
-                                    <t t-set="partner_children" t-value="partner.mapped('child_ids').filtered(lambda x: x.type == type)"/>
-                                </t>
-                            </div></div>
+                            <div t-att-class="'tab-pane fade %s' % ('show active' if type=='other' else '')" t-att-id="type" role="tabpanel" t-attf-aria-labelledby="{{type}}-tab">
+                                <div>
+                                    <t t-call="stone_appointment.contact_child_card">
+                                        <t t-set="partner_children" t-value="contacts"/>
+                                    </t>
+                                </div>
+                            </div>
                         </t>
                     </div>
                 </div>

@@ -1,7 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <odoo>
-    <data>
+        <template id="edit_contact_template">
+            <t t-call="website.layout">
+                <t t-set="no_footer" t-value="1"/>
+                <t t-set="additional_title">Edit Contact</t>
+                <form t-att-action="'/my/contacts/edit/%s' % contact.id" method="post">
+                    <div class="wrap">
+                        <div class="container py-2">
+                            <div class="row">
+                                <div class="col-12">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <div class="row my-2" id="form_group_1">
+                                        <div t-attf-class="form-group col-12">
+                                            <label class="col-form-label" for="name">Contact Name</label>
+                                            <input type="text" name="name" t-attf-class="form-control" t-att-value="contact.name" required="1" />
+                                        </div>
+                                    </div>
+                                    <div class="row my-2">
+                                        <div t-attf-class="form-group col-4">
+                                            <label class="col-form-label" for="email">Email</label>
+                                            <input type="tel" name="email" t-attf-class="form-control" t-att-value="contact.email" />
+
+                                            <label class="col-form-label" for="street">Street <span class="d-none d-md-inline"> and Number</span></label>
+                                            <input type="text" name="street" t-attf-class="form-control" t-att-value="contact.street"/>
+
+                                            <label class="col-form-label" for="country_id">Country</label>
+                                            <select id="country_id" name="country_id" t-attf-class="form-control">
+                                                <t t-foreach="countries" t-as="c">
+                                                    <option t-att-value="c.id" t-att-selected="c.id == contact.country_id.id">
+                                                        <t t-esc="c.name"/>
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div t-attf-class="form-group col-4">
+                                            <label class="col-form-label" for="mobile">Mobile</label>
+                                            <input type="tel" name="mobile" t-attf-class="form-control" t-att-value="contact.mobile"/>
+
+                                            <label class="col-form-label" for="city">City</label>
+                                            <input type="text" name="city" t-attf-class="form-control" t-att-value="contact.city"/>
+
+                                            <label class="col-form-label" for="state_id">State / Province</label>
+                                            <select name="state_id" t-attf-class="form-control">
+                                                <t t-foreach="states" t-as="s">
+                                                    <option t-att-value="s.id" t-att-selected="s.id == contact.state_id.id">
+                                                        <t t-esc="s.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div t-attf-class="form-group col-4">
+                                            <label class="col-form-label" for="phone">Phone</label>
+                                            <input type="tel" name="phone" t-attf-class="form-control" t-att-value="contact.phone"/>
+
+                                            <label class="col-form-label" for="zip">Zip Code</label>
+                                            <input type="number" name="zip" t-attf-class="form-control" t-att-value="contact.zip"/>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3"><div t-attf-class="form-group col-6">
+                                        <a href="/my/account" class="btn btn-primary float-start mb32">
+                                            Cancel
+                                            <span class="fa fa-long-arrow-left"/>
+                                        </a></div><div t-attf-class="form-group col-6">
+                                        <button type="submit" class="btn btn-primary float-end mb32">
+                                            Submit
+                                            <span class="fa fa-long-arrow-right" />
+                                        </button></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </t>
+        </template>
+
         <template id="add_contact_my_details">
             <t t-call="website.layout">
                 <t t-set="no_footer" t-value="1"/>
@@ -87,5 +161,5 @@
                 </form>
             </t>
         </template>
-    </data>
+    
 </odoo>

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pytz
 import random
 from datetime import datetime, timedelta, time
 from odoo.http import request
@@ -178,9 +179,10 @@ class AccountMove(models.Model):
 
     def get_guest_ids_date_start(self):
         self.ensure_one()
-        stn_date_start = self.mapped("line_ids").mapped("sale_line_ids").mapped("order_id").mapped("stn_date_start")
-        print("----------stn_date_start", self, stn_date_start)
-        return stn_date_start and stn_date_start[0] or ""
+        event_id = self.mapped("line_ids").mapped("sale_line_ids").mapped("order_id").mapped("event_id")
+        if not event_id:
+            return "-"
+        return event_id.get_date_start_tz()
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"

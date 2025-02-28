@@ -179,10 +179,12 @@ class AccountMove(models.Model):
 
     def get_guest_ids_date_start(self):
         self.ensure_one()
-        event_id = self.mapped("line_ids").mapped("sale_line_ids").mapped("order_id").mapped("event_id")
-        if not event_id:
+        order_id = self.mapped("line_ids").mapped("sale_line_ids").mapped("order_id")
+        if not order_id:
             return "-"
-        return event_id.get_date_start_tz()
+        if not order_id.stn_date_start:
+            return "-"
+        return order_id.get_date_start_tz()
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -551,6 +553,11 @@ class SaleOrder(models.Model):
             sale.with_context(cancel_internal=True).action_cancel_prepare_anglers()
         return res
 
+    def get_date_start_tz(self):
+        timezone = self._context.get('tz') or self.env.user.partner_id.tz or 'UTC'
+        self = self.with_context(tz=timezone)
+        tz = pytz.timezone(timezone)
+        return pytz.utc.localize(self.stn_date_start).astimezone(tz).date()
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"

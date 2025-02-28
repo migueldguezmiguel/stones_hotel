@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Custom Appointment',
-    'version': '17.0.2.16',
+    'version': '17.0.2.17',
     'summary': """ Custom Appointment Summary """,
     'author': 'Miguel Miguel',
     'website': 'https://miguel.odoo.com',
     'category': 'Uncategorized',
     'depends': [
         'base', 
+        'web',
         'calendar',
         'portal',
         'account',
@@ -36,6 +37,7 @@
         'views/hotel_appointment_portal_templates.xml',
         'views/hotel_appointment_website_templates.xml',
 
+        'views/portal_templates.xml',
         'views/portal_reservation_templates.xml',
         'views/portal_invoice_templates.xml',
 
@@ -49,11 +51,15 @@
             'stone_appointment/static/src/js/stone_appointment_select.js',
             'stone_appointment/static/src/css/stone_appointment_select.css',
             'stone_appointment/static/src/css/stone_appointment_form.css',
+
+            'stone_appointment/static/src/js/datetimepicker.js',
+
         ],
-        'stone_appointment.stone_embed_assets': [
+        'stone_appointment.stone_appointment_assets': [
             # TODO this bundle now includes 'assets_common' files directly, but
             # most of these files are useless in this context, clean this up.
             ('include', 'web._assets_helpers'),
+            ('include', 'web._assets_frontend_helpers'),            
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
@@ -61,6 +67,8 @@
             'web/static/lib/odoo_ui_icons/*',
             'web/static/lib/select2/select2.css',
             'web/static/lib/select2-bootstrap-css/select2-bootstrap.css',
+
+            'stone_appointment/static/src/js/datetimepicker.js',            
         ],
     },       
     'application': False,
@@ -69,5 +77,3 @@
     'license': 'LGPL-3',
 }
 
-# 'stone_appointment/static/lib/select2/*',
-# 'stone_appointment/static/src/js/stone_appointment_select2.js',

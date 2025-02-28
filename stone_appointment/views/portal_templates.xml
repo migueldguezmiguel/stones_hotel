@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_searchbar_inherit" inherit_id="portal.portal_searchbar">
+        <xpath expr="//div[@id='o_portal_navbar_content']/div[@class='nav flex-column flex-sm-row gap-2 ms-auto p-0 mb-3 mb-lg-0 mt-1 mt-lg-0']" position="inside">
+            <!-- Agregar campo de fecha y hora dentro de un btn-group -->
+
+            <!-- 
+            <form t-if="search_datetime" method="get" t-att-action="request.httprequest.path" class="o_portal_search_panel col-md-5 col-xl-4 ms-lg-2">
+                <div class="input-group">
+                        <input type="datetime-local" name="datetime_filter" class="form-control form-control-sm d-inline-block w-auto" 
+                               t-att-value="datetime_filter or ''" t-attf-style="max-width: 200px;"
+                               onchange="this.form.submit()"/>
+                        <input type="hidden" t-foreach="request.httprequest.args" t-as="key" t-att-name="key" t-att-value="request.httprequest.args[key]"/>
+                    <div class="input-group-append">
+                        <button class="btn btn-secondary o_wait_lazy_js" type="submit">
+                            <span class="oi oi-search"/>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            -->
+
+            <div t-if="search_datetime"  class="ms-lg-2">
+                <form method="get" t-att-action="request.httprequest.path" class="d-inline">
+                    <div class="btn-group">
+                        <div class="input-group date">
+                            <input type="text" name="datetime_filter" 
+                                   class="form-control form-control-sm datetimepicker-input oe_datepicker_root" 
+                                   data-widget="datetime-picker" 
+                                   data-widget-type="datetime" 
+                                   t-att-value="datetime_filter or ''" 
+                                   placeholder="Selecciona fecha y hora" 
+                                   dateFormat='yyyy-MM-dd HH:mm:ss'
+                                   t-attf-style="max-width: 200px;" onchange="this.form.submit()"/>
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fa fa-calendar"/></span>
+                            </div>
+                        </div>
+                        <input type="hidden" t-foreach="request.httprequest.args" t-as="key" t-att-name="key" t-att-value="request.httprequest.args[key]"/>
+                    </div>
+                </form>
+            </div>
+
+
+        </xpath>
+
+        <!-- Script inline al final del nav -->
+        <xpath expr="//nav" position="inside">
+            <script type="text/javascript">
+
+            </script>
+        </xpath>
+
+    </template>
+</odoo>
+

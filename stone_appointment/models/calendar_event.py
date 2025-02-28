@@ -121,6 +121,6 @@ class CalendarEvent(models.Model):
 
     def get_date_start_tz(self):
         timezone = self._context.get('tz') or self.env.user.partner_id.tz or 'UTC'
-        self = self.with_context(tz=timezone)        
+        self = self.with_context(tz=timezone)
         tz = pytz.timezone(timezone)
         return pytz.utc.localize(self.start).astimezone(tz).date()

@@ -19,6 +19,12 @@ Cambios y Actualizaciones
 =========================
 
 
+2025-02-28 (Versión: 17.0.2.17 )
+--------------------------------
+
+- Desarrollo: Se realiza modificaciones al Widget de búsqueda. Se agrega el campo Selector de Fecha y realiza el filtro
+
+
 2025-02-26 (Versión: 17.0.2.16 )
 --------------------------------
 

@@ -18,6 +18,11 @@ Para utilizar este módulo, es necesario tener configurado:
 Cambios y Actualizaciones
 =========================
 
+2025-05-21 (Versión: 17.0.2.19 )
+--------------------------------
+
+- Desarrollo: Se realiza proceso de cancelación de Anglers y se borra los registros de Angler Lines de las cotizaciones
+
 
 2025-02-28 (Versión: 17.0.2.17 )
 --------------------------------

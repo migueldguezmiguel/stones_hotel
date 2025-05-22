@@ -547,6 +547,10 @@ class SaleOrder(models.Model):
                 event.show_as = 'free'
                 event.action_mass_archive('all_events')
 
+            sale.angler_line.unlink()
+            sale.stn_date_start = False
+            sale.stn_date_stop = False
+
     def action_cancel(self):
         res = super().action_cancel()
         for sale in self:

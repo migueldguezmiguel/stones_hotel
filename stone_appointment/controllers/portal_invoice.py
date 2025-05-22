@@ -49,7 +49,6 @@ class CustomPortalAccount(PortalAccount):
             'all': {'label': _('Search in All'), 'input': 'all'},
             'name': {'label': _('Search in Name'), 'input': 'name'},
             'angler': {'label': _('Search in Anglers'), 'input': 'angler'},
-            'startdate': {'label': _('Search in Start Date'), 'input': 'startdate'}
         }
 
         searchbar_groupby = {}
@@ -77,8 +76,6 @@ class CustomPortalAccount(PortalAccount):
             utc_dt = local_dt.astimezone(pytz.UTC)
             utc_dt_str = utc_dt.strftime('%Y-%m-%d %H:%M:%S')
             domain = AND([domain, self._get_invoice_search_domain("startdate", utc_dt_str)])
-            print("--------------- local_dt", local_dt, utc_dt_str, domain)
-
 
         session_tz = request.session.get('timezone')
         invoices = AccountInvoice.with_context(tz=session_tz).search(domain, order=order, limit=self._items_per_page, offset=pager['offset'])
